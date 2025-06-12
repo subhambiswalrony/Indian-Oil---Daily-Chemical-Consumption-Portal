@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Chemical Consumption Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="header">
+        <div class="navbar-logo-title">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg" alt="IOCL Logo"
+                class="iocl-logo">
+            <span class="navbar-title">
+                Indian Oil Corporation Limited
+            </span>
+        </div>
+        <span class="navbar-center">(Paradip Refinery)</span>
+        <span class="datetime" id="datetime"></span>
+    </div>
+
+    <div class="sidebar"><br>
+        <ul>
+            <li>Report Page</li>
+            <li>Settings</li>
+            <li>Logout</li>
+        </ul>
+        <div class="sidebar-logo-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg" alt="IOCL Logo"
+                class="sidebar-logo">
+            <div class="sidebar-company-name">Indian Oil Corporation Limited<br>
+                (Paradip Refinery)
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="panel">
+            <h2>Daily Chemical Management & Data Entry Panel</h2>
+            <form id="chemicalForm">
+                <div class="form-group">
+                    <label for="date">Select Date:</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="unit">Selected Unit:</label>
+                    <input type="text" id="unit" name="unit" required>
+                </div>
+                <div class="form-group">
+                    <label for="chemical">Select Chemical:</label>
+                    <input type="text" id="chemical" name="chemical" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="uom">Unit Of Measurement (UOM):</label>
+                        <input type="text" id="uom" name="uom" required>
+                    </div>
+                    <div class="form-group half-width">
+                        <label for="sapcode">Sap Material Code:</label>
+                        <input type="text" id="sapcode" name="sapcode" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="opening">Opening Balance:</label>
+                    <input type="number" id="opening" name="opening" step="any" placeholder="Input Calculated Filed"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="receive">Input Received Qty:</label>
+                    <input type="number" id="receive" name="receive" step="any" placeholder="Input Calculated Filed"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="consumption">Water Consumption Qty:</label>
+                    <input type="number" id="consumption" name="consumption" step="any"
+                        placeholder="Input Calculated Filed" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="closing">Closing Balance:</label>
+                        <input type="number" id="closing" name="closing" step="any" placeholder="Input Calculated Filed"
+                            readonly>
+                    </div>
+                    <div class="form-group details-btn-group">
+                        <label style="visibility: hidden;">Details</label>
+                        <button type="button" class="details-btn">Details</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sapbalance">SAP Balance:</label>
+                    <input type="number" id="sapbalance" name="sapbalance" step="any" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="remarks">Remark:</label>
+                    <textarea id="remarks" name="remarks" rows="2" placeholder="Enter any remarks..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit">Submit</button>
+                    <button type="button" class="clear"
+                        onclick="document.getElementById('chemicalForm').reset();">Clear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="footer">
+        Thanks For Visiting Our Daily Chemical Consumption Entry Page Developed by IS Department
+    </div>
+    <div class="welcome">
+        Welcome: User
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

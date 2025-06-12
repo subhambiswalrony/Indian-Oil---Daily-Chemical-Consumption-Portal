@@ -1,10 +1,11 @@
 import React from 'react';
 import { ClipboardList, Settings, LogOut, Building } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Sidebar: React.FC = () => {
   const sidebarItems = [
-    { icon: ClipboardList, text: 'Report Page' },
+    { icon: ClipboardList, text: 'Report Page', path: '/reportpage' },
     { icon: Settings, text: 'Settings' },
     { icon: LogOut, text: 'Logout' }
   ];
@@ -18,14 +19,15 @@ const Sidebar: React.FC = () => {
       <nav className="py-6">
         <ul className="space-y-2">
           {sidebarItems.map((item, index) => (
-            <motion.li
-              key={index}
-              whileHover={{ x: 10 }}
-              className="sidebar-item"
-            >
-              <item.icon className="w-5 h-5 mr-3" />
-              <span>{item.text}</span>
+            <motion.li key={index} whileHover={{ x: 10 }}>
+              <Link to={item.path || '#'}
+                    className="flex items-center px-4 py-2 hover:bg-blue-700 rounded-lg transition"
+              >
+                <item.icon className="w-5 h-5 mr-3" />
+                <span>{item.text}</span>
+              </Link>
             </motion.li>
+
           ))}
         </ul>
       </nav>
