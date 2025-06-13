@@ -9,8 +9,8 @@ app.use(express.json());
 
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: 'Rony@0911',
+  user: 'root',   // SQL username
+  password: 'Rony@0911',    // SQL password
   database: 'iocl_chemical_form'
 });
 

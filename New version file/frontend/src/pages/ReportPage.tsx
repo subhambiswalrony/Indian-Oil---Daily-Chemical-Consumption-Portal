@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Home, Calendar, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import { Home } from 'lucide-react';
 
 function App() {
@@ -148,7 +149,7 @@ function App() {
             </button>
 
             {/* Home Button */}
-            <Link to="/">
+            <Link to="/chemical-form">
               <button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center space-x-2 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                 <Home className="w-5 h-5" />
                 <span>Home</span>
