@@ -48,7 +48,7 @@ function App() {
   // Simulate API call
   setTimeout(() => {
     const validEmail = 'biswalsubhamrony@gmail.com';
-    const validPassword = 'Rony@0911';
+    const validPassword = '123456789';
 
     if (email === validEmail && password === validPassword) {
       localStorage.setItem('isAuthenticated', 'true');
@@ -218,7 +218,7 @@ function App() {
               <p className="text-sm text-gray-600">
                 Don't have an account?{' '}
                 <button className="text-orange-600 hover:text-orange-500 font-medium transition-colors">
-                  Contact Administrator
+                  Sign Up
                 </button>
               </p>
             </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, Building2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const [dateTime, setDateTime] = useState<string>('');
@@ -49,7 +50,7 @@ const Header: React.FC = () => {
             <h1 className="text-2xl font-bold md:hidden">IOCL</h1>
           </div>
         </motion.div>
-        
+
         <motion.div
           className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-xl"
           whileHover={{ scale: 1.02 }}
@@ -57,7 +58,7 @@ const Header: React.FC = () => {
           <Building2 className="w-5 h-5" />
           <span className="text-lg font-semibold">(Paradip Refinery)</span>
         </motion.div>
-        
+
         <motion.div
           className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-xl"
           whileHover={{ scale: 1.02 }}
@@ -65,6 +66,14 @@ const Header: React.FC = () => {
           <Clock className="w-5 h-5" />
           <span className="text-sm md:text-base font-medium">{dateTime}</span>
         </motion.div>
+        <Link to="/">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-semibold text-sm md:text-base"
+          >
+            Sign Out
+          </motion.button>
+        </Link>
       </div>
     </motion.header>
   );
