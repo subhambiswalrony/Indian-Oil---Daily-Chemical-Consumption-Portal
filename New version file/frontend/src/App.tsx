@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 import UserWelcome from './components/UserWelcome';
 
+import SignUpPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import ChemicalFormPage from './pages/ChemicalForm';
 import ReportPage from './pages/ReportPage';
@@ -35,7 +36,8 @@ function App() {
     <div className="min-h-screen bg-gray-50 font-sans">
       <Routes>
         {/* Public Route - Login should be default */}
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<SignUpPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
         {/* Protected Routes */}
         <Route

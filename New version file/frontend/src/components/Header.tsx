@@ -66,14 +66,14 @@ const Header: React.FC = () => {
           <Clock className="w-5 h-5" />
           <span className="text-sm md:text-base font-medium">{dateTime}</span>
         </motion.div>
-        <Link to="/">
+        {/* <Link to="/">
           <motion.button
             whileHover={{ scale: 1.05 }}
             className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-semibold text-sm md:text-base"
           >
             Sign Out
           </motion.button>
-        </Link>
+        </Link> */}
       </div>
     </motion.header>
   );

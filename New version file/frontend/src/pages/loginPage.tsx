@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  User, 
-  Lock, 
-  Eye, 
-  EyeOff, 
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
+
+import {
+  User,
+  Lock,
+  Eye,
+  EyeOff,
   ArrowRight,
   CheckCircle,
   AlertCircle
@@ -21,64 +25,135 @@ function App() {
 
   const validateForm = () => {
     const newErrors = { email: '', password: '' };
-    
+
     if (!email) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = 'Please enter a valid email';
     }
-    
+
     if (!password) {
       newErrors.password = 'Password is required';
     } else if (password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
-    
+
     setErrors(newErrors);
     return !newErrors.email && !newErrors.password;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  setIsLoading(true);
+    setIsLoading(true);
 
-  // Simulate API call
-  setTimeout(() => {
-    const validEmail = 'biswalsubhamrony@gmail.com';
-    const validPassword = '123456789';
+    // Simulate API call
+    setTimeout(() => {
+      const validEmail = 'biswalsubhamrony@gmail.com';
+      const validPassword = '123456789';
 
-    if (email === validEmail && password === validPassword) {
-      localStorage.setItem('isAuthenticated', 'true');
-      setIsLoading(false);
-      navigate('/chemical-form');
-    } else {
-      setIsLoading(false);
-      alert('❌ Wrong email or password');
-    }
-  }, 1500);
-};
+      if (email === validEmail && password === validPassword) {
+        localStorage.setItem('isAuthenticated', 'true');
+        setIsLoading(false);
+        navigate('/chemical-form');
+      } else {
+        setIsLoading(false);
+        alert('❌ Wrong email or password');
+      }
+    }, 1500);
+  };
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 flex items-center justify-center p-4">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-100/20 to-blue-100/20"></div>
+    <div className="min-h-screen relative bg-gradient-to-br from-orange-50 via-white to-blue-50 flex items-center justify-center p-4 overflow-hidden">
+
+      {/* 🟠 Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {/* Floating circles */}
+        <motion.div
+          className="absolute top-20 left-10 w-20 h-20 bg-orange-200 rounded-full opacity-20"
+          animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-40 right-20 w-16 h-16 bg-red-200 rounded-full opacity-20"
+          animate={{ y: [0, 15, 0], x: [0, -8, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+        <motion.div
+          className="absolute bottom-40 left-20 w-12 h-12 bg-yellow-200 rounded-full opacity-20"
+          animate={{ y: [0, -12, 0], x: [0, 6, 0] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-10 w-24 h-24 bg-orange-300 rounded-full opacity-20"
+          animate={{ y: [0, 18, 0], x: [0, -12, 0] }}
+          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+        />
+
+        {/* Gradient shapes */}
+        <motion.div
+          className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-orange-100 to-red-100 rounded-full opacity-30 blur-3xl"
+          animate={{ scale: [1, 1.1, 1], rotate: [0, 90, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-yellow-100 to-orange-100 rounded-full opacity-30 blur-3xl"
+          animate={{ scale: [1, 1.2, 1], rotate: [0, -90, 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+        />
+
+        {/* Animated lines */}
+        <svg className="absolute inset-0 w-full h-full">
+          <motion.path
+            d="M0,200 Q400,100 800,200"
+            stroke="url(#gradient1)"
+            strokeWidth="2"
+            fill="none"
+            opacity="0.1"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 3, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }}
+          />
+          <motion.path
+            d="M0,400 Q600,300 1200,400"
+            stroke="url(#gradient2)"
+            strokeWidth="2"
+            fill="none"
+            opacity="0.1"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 4, repeat: Infinity, repeatType: "loop", ease: "easeInOut", delay: 1 }}
+          />
+          <defs>
+            <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style={{ stopColor: '#f97316', stopOpacity: 0.5 }} />
+              <stop offset="100%" style={{ stopColor: '#dc2626', stopOpacity: 0.5 }} />
+            </linearGradient>
+            <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style={{ stopColor: '#eab308', stopOpacity: 0.5 }} />
+              <stop offset="100%" style={{ stopColor: '#f97316', stopOpacity: 0.5 }} />
+            </linearGradient>
+          </defs>
+        </svg>
       </div>
-      
+
       <div className="relative w-full max-w-md">
         {/* Main Card */}
-        <div className="glass-card rounded-2xl overflow-hidden card-hover">
+        <motion.div className="glass-card rounded-2xl overflow-hidden card-hover"
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          whileHover={{ scale: 1.02 }}>
           {/* Header */}
           <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-8 py-8 text-center relative">
             <div className="flex justify-center mb-4">
               <div className="bg-white rounded-full p-3 shadow-lg animate-float">
-                <img 
-                  src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg" 
-                  alt="Indian Oil Logo" 
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg"
+                  alt="Indian Oil Logo"
                   className="w-12 h-12"
                 />
               </div>
@@ -109,11 +184,10 @@ function App() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={`form-input pl-10 pr-3 input-focus ${
-                      errors.email 
-                        ? 'border-red-500 focus:ring-red-200 focus:border-red-500' 
+                    className={`form-input pl-10 pr-3 input-focus ${errors.email
+                        ? 'border-red-500 focus:ring-red-200 focus:border-red-500'
                         : ''
-                    }`}
+                      }`}
                     placeholder="Enter your email"
                   />
                   {errors.email && (
@@ -144,11 +218,10 @@ function App() {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className={`form-input pl-10 pr-10 input-focus ${
-                      errors.password 
-                        ? 'border-red-500 focus:ring-red-200 focus:border-red-500' 
+                    className={`form-input pl-10 pr-10 input-focus ${errors.password
+                        ? 'border-red-500 focus:ring-red-200 focus:border-red-500'
                         : ''
-                    }`}
+                      }`}
                     placeholder="Enter your password"
                   />
                   <button
@@ -217,13 +290,15 @@ function App() {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Don't have an account?{' '}
-                <button className="text-orange-600 hover:text-orange-500 font-medium transition-colors">
-                  Sign Up
-                </button>
+                <Link to='/'>
+                  <button className="text-orange-600 hover:text-orange-500 font-medium transition-colors">
+                    Sign Up
+                  </button>
+                </Link>
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Footer */}
         <div className="mt-6 text-center">
@@ -246,10 +321,14 @@ function App() {
         </div>
 
         {/* Security Badge */}
-        <div className="absolute -top-2 -right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center shadow-lg">
+        <motion.div className="absolute -top-2 -right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center shadow-lg"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20, delay: 1 }}
+          whileHover={{ scale: 1.1 }}>
           <CheckCircle className="w-3 h-3 mr-1" />
           Secure
-        </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ const Sidebar: React.FC = () => {
   const sidebarItems = [
     { icon: ClipboardList, text: 'Report Page', path: '/reportpage' },
     { icon: Settings, text: 'Settings' },
-    { icon: LogOut, text: 'Logout' }
+    { icon: LogOut, text: 'Logout', path: '/login' }
   ];
 
   return (
