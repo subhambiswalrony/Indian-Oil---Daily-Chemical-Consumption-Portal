@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import {
-  User,
-  Mail,
-  Phone,
-  Lock,
-  Eye,
-  EyeOff,
-  ArrowRight,
+import { 
+  User, 
+  Mail, 
+  Phone, 
+  Lock, 
+  Eye, 
+  EyeOff, 
+  ArrowRight, 
   CheckCircle,
   AlertCircle
 } from 'lucide-react';
@@ -86,14 +86,14 @@ function App() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     if (!validateForm()) return;
 
     setIsLoading(true);
-
+    
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    
     setIsLoading(false);
     setIsSuccess(true);
   };
@@ -104,7 +104,7 @@ function App() {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
-
+    
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
@@ -128,7 +128,7 @@ function App() {
             ease: "easeInOut"
           }}
         />
-
+        
         <motion.div
           className="absolute top-40 right-20 w-16 h-16 bg-red-200 rounded-full opacity-20"
           animate={{
@@ -142,7 +142,7 @@ function App() {
             delay: 1
           }}
         />
-
+        
         <motion.div
           className="absolute bottom-40 left-20 w-12 h-12 bg-yellow-200 rounded-full opacity-20"
           animate={{
@@ -156,7 +156,7 @@ function App() {
             delay: 2
           }}
         />
-
+        
         <motion.div
           className="absolute bottom-20 right-10 w-24 h-24 bg-orange-300 rounded-full opacity-20"
           animate={{
@@ -184,7 +184,7 @@ function App() {
             ease: "easeInOut"
           }}
         />
-
+        
         <motion.div
           className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-yellow-100 to-orange-100 rounded-full opacity-30 blur-3xl"
           animate={{
@@ -244,7 +244,7 @@ function App() {
           </defs>
         </svg>
       </div>
-
+      
       <div className="relative z-10 min-h-screen flex flex-col">
         <div className="flex-1 flex items-center justify-center p-4">
           <motion.div
@@ -268,8 +268,8 @@ function App() {
                   <motion.div
                     className="relative animate-float"
                   >
-                    <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg"
+                    <img 
+                      src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg" 
                       alt="Indian Oil Corporation Limited"
                       className="h-16 w-16 object-contain"
                     />
@@ -299,7 +299,7 @@ function App() {
                   </div>
                 </motion.div>
               </motion.div>
-
+              
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -370,8 +370,9 @@ function App() {
                           name="firstName"
                           value={formData.firstName}
                           onChange={handleInputChange}
-                          className={`form-input input-focus pl-10 ${errors.firstName ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                            }`}
+                          className={`form-input input-focus pl-10 ${
+                            errors.firstName ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                          }`}
                           placeholder="Enter your first name"
                         />
                       </div>
@@ -402,8 +403,9 @@ function App() {
                           name="lastName"
                           value={formData.lastName}
                           onChange={handleInputChange}
-                          className={`form-input input-focus pl-10 ${errors.lastName ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                            }`}
+                          className={`form-input input-focus pl-10 ${
+                            errors.lastName ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                          }`}
                           placeholder="Enter your last name"
                         />
                       </div>
@@ -436,8 +438,9 @@ function App() {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className={`form-input input-focus pl-10 ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                          }`}
+                        className={`form-input input-focus pl-10 ${
+                          errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                        }`}
                         placeholder="Enter your email address"
                       />
                     </div>
@@ -469,8 +472,9 @@ function App() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className={`form-input input-focus pl-10 ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                          }`}
+                        className={`form-input input-focus pl-10 ${
+                          errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                        }`}
                         placeholder="Enter your phone number"
                       />
                     </div>
@@ -503,8 +507,9 @@ function App() {
                           name="password"
                           value={formData.password}
                           onChange={handleInputChange}
-                          className={`form-input input-focus pl-10 pr-12 ${errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                            }`}
+                          className={`form-input input-focus pl-10 pr-12 ${
+                            errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                          }`}
                           placeholder="Enter your password"
                         />
                         <button
@@ -542,8 +547,9 @@ function App() {
                           name="confirmPassword"
                           value={formData.confirmPassword}
                           onChange={handleInputChange}
-                          className={`form-input input-focus pl-10 pr-12 ${errors.confirmPassword ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                            }`}
+                          className={`form-input input-focus pl-10 pr-12 ${
+                            errors.confirmPassword ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                          }`}
                           placeholder="Confirm your password"
                         />
                         <button
@@ -612,22 +618,55 @@ function App() {
                     <motion.button
                       type="submit"
                       disabled={isLoading}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 px-6 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-orange-200"
+                      whileHover={{ scale: isLoading ? 1 : 1.02 }}
+                      whileTap={{ scale: isLoading ? 1 : 0.98 }}
+                      className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 px-6 rounded-xl font-semibold flex items-center justify-center space-x-2 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-orange-200 relative overflow-hidden"
                     >
                       {isLoading ? (
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          className="h-5 w-5 border-2 border-white border-t-transparent rounded-full"
-                        />
+                        <>
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                            className="h-5 w-5 border-2 border-white border-t-transparent rounded-full"
+                          />
+                          <motion.span
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="ml-2"
+                          >
+                            Creating
+                            <motion.span
+                              animate={{ opacity: [0, 1, 0] }}
+                              transition={{ duration: 1.5, repeat: Infinity }}
+                            >
+                              ...
+                            </motion.span>
+                          </motion.span>
+                          <motion.div
+                            animate={{ x: [0, 10, 0] }}
+                            transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+                          >
+                            <ArrowRight className="h-5 w-5 ml-2" />
+                          </motion.div>
+                        </>
                       ) : (
                         <>
                           <span>Create Account</span>
-                          <ArrowRight className="h-5 w-5" />
+                          <motion.div
+                            whileHover={{ x: 5 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                          >
+                            <ArrowRight className="h-5 w-5" />
+                          </motion.div>
                         </>
                       )}
+                      
+                      {/* Animated background effect */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-orange-600 to-red-700 opacity-0"
+                        whileHover={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
                     </motion.button>
                   </motion.div>
 
