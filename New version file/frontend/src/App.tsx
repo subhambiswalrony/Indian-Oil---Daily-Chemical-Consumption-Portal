@@ -6,7 +6,7 @@ import Footer from './components/Footer';
 import UserWelcome from './components/UserWelcome';
 
 import SignUpPage from './pages/SignupPage';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/loginPage';
 import ChemicalFormPage from './pages/ChemicalForm';
 import ReportPage from './pages/ReportPage';
 
@@ -35,7 +35,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       <Routes>
-        {/* Public Route - Login should be default */}
+        {/* Public Route - Sign Up and Login should be default */}
         <Route path="/" element={<SignUpPage />} />
         <Route path="/login" element={<LoginPage />} />
 
