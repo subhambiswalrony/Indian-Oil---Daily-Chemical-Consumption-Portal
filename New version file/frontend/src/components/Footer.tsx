@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
         <div className="flex items-center justify-center space-x-2">
           {/* <Code className="w-5 h-5" /> */}
           <p className="text-center">
-            Thanks For Visiting Our Daily Chemical Consumption Entry Page Developed by IS Department
+            Thanks For Visiting Our Daily Chemical Consumption Entry Page Developed by Indian Oil Department
           </p>
         </div>
       </div>
