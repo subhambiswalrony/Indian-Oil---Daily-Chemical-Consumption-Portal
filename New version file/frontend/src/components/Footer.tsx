@@ -1,5 +1,5 @@
 import React from 'react';
-import { Code } from 'lucide-react';
+// import { Code } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Footer: React.FC = () => {
@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
     >
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-center space-x-2">
-          <Code className="w-5 h-5" />
+          {/* <Code className="w-5 h-5" /> */}
           <p className="text-center">
             Thanks For Visiting Our Daily Chemical Consumption Entry Page Developed by IS Department
           </p>
