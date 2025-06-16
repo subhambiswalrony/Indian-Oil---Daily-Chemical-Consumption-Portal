@@ -9,8 +9,6 @@ import {
   ArrowRight,
   CheckCircle,
   AlertCircle,
-  Sparkles,
-  Trophy
 } from 'lucide-react';
 
 function LoginPage() {
