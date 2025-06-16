@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-// import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  ArrowRight, 
+import {
+  User,
+  Mail,
+  Phone,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowRight,
   CheckCircle,
   AlertCircle
 } from 'lucide-react';
@@ -38,6 +38,7 @@ function App() {
     acceptTerms: false
   });
 
+  const navigate = useNavigate();
   const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -87,17 +88,47 @@ function App() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    setIsLoading(false);
-    setIsSuccess(true);
+
+    try {
+      const response = await fetch('http://localhost:5000/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          password: formData.password
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setIsSuccess(true); // show success message
+
+        localStorage.setItem('userId', result.userId);
+        localStorage.setItem('isAuthenticated', 'true'); // ✅ this line enables access to protected routes
+
+        // delay redirect to let animation appear
+        setTimeout(() => {
+          navigate('/chemical-form'); // or '/login' if you prefer
+        }, 3000); // wait 3 seconds
+      }
+      else {
+        alert(result.error || 'Signup failed');
+      }
+    } catch (err) {
+      alert('Server error. Try again later.');
+    } finally {
+      setIsLoading(false);
+    }
   };
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -105,7 +136,7 @@ function App() {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
@@ -129,7 +160,7 @@ function App() {
             ease: "easeInOut"
           }}
         />
-        
+
         <motion.div
           className="absolute top-40 right-20 w-16 h-16 bg-red-200 rounded-full opacity-20"
           animate={{
@@ -143,7 +174,7 @@ function App() {
             delay: 1
           }}
         />
-        
+
         <motion.div
           className="absolute bottom-40 left-20 w-12 h-12 bg-yellow-200 rounded-full opacity-20"
           animate={{
@@ -157,7 +188,7 @@ function App() {
             delay: 2
           }}
         />
-        
+
         <motion.div
           className="absolute bottom-20 right-10 w-24 h-24 bg-orange-300 rounded-full opacity-20"
           animate={{
@@ -185,7 +216,7 @@ function App() {
             ease: "easeInOut"
           }}
         />
-        
+
         <motion.div
           className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-yellow-100 to-orange-100 rounded-full opacity-30 blur-3xl"
           animate={{
@@ -245,7 +276,7 @@ function App() {
           </defs>
         </svg>
       </div>
-      
+
       <div className="relative z-10 min-h-screen flex flex-col">
         <div className="flex-1 flex items-center justify-center p-4">
           <motion.div
@@ -269,8 +300,8 @@ function App() {
                   <motion.div
                     className="relative animate-float"
                   >
-                    <img 
-                      src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg" 
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg"
                       alt="Indian Oil Corporation Limited"
                       className="h-16 w-16 object-contain"
                     />
@@ -300,7 +331,7 @@ function App() {
                   </div>
                 </motion.div>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -371,9 +402,8 @@ function App() {
                           name="firstName"
                           value={formData.firstName}
                           onChange={handleInputChange}
-                          className={`form-input input-focus pl-10 ${
-                            errors.firstName ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                          }`}
+                          className={`form-input input-focus pl-10 ${errors.firstName ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                            }`}
                           placeholder="Enter your first name"
                         />
                       </div>
@@ -404,9 +434,8 @@ function App() {
                           name="lastName"
                           value={formData.lastName}
                           onChange={handleInputChange}
-                          className={`form-input input-focus pl-10 ${
-                            errors.lastName ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                          }`}
+                          className={`form-input input-focus pl-10 ${errors.lastName ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                            }`}
                           placeholder="Enter your last name"
                         />
                       </div>
@@ -439,9 +468,8 @@ function App() {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className={`form-input input-focus pl-10 ${
-                          errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                        }`}
+                        className={`form-input input-focus pl-10 ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                          }`}
                         placeholder="Enter your email address"
                       />
                     </div>
@@ -473,9 +501,8 @@ function App() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className={`form-input input-focus pl-10 ${
-                          errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                        }`}
+                        className={`form-input input-focus pl-10 ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                          }`}
                         placeholder="Enter your phone number"
                       />
                     </div>
@@ -508,9 +535,8 @@ function App() {
                           name="password"
                           value={formData.password}
                           onChange={handleInputChange}
-                          className={`form-input input-focus pl-10 pr-12 ${
-                            errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                          }`}
+                          className={`form-input input-focus pl-10 pr-12 ${errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                            }`}
                           placeholder="Enter your password"
                         />
                         <button
@@ -548,9 +574,8 @@ function App() {
                           name="confirmPassword"
                           value={formData.confirmPassword}
                           onChange={handleInputChange}
-                          className={`form-input input-focus pl-10 pr-12 ${
-                            errors.confirmPassword ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
-                          }`}
+                          className={`form-input input-focus pl-10 pr-12 ${errors.confirmPassword ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                            }`}
                           placeholder="Confirm your password"
                         />
                         <button
@@ -661,7 +686,7 @@ function App() {
                           </motion.div>
                         </>
                       )}
-                      
+
                       {/* Animated background effect */}
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-orange-600 to-red-700 opacity-0"

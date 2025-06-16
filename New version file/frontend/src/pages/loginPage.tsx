@@ -41,32 +41,41 @@ function LoginPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    setIsLoading(true);
+  setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      const validEmail = 'biswalsubhamrony@gmail.com';
-      const validPassword = '123456789';
+  try {
+    const response = await fetch('http://localhost:5000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
 
-      if (email === validEmail && password === validPassword) {
-        setIsLoading(false);
-        setShowSuccess(true);
-        
-        // Navigate after success animation
-        setTimeout(() => {
-          localStorage.setItem('isAuthenticated', 'true');
-          navigate('/chemical-form');
-        }, 3000);
-      } else {
-        setIsLoading(false);
-        alert('❌ Wrong email or password');
-      }
-    }, 1500);
-  };
+    const result = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem('userId', result.userId);
+      localStorage.setItem('isAuthenticated', 'true'); // set auth flag
+
+      setShowSuccess(true); // ✅ Show animation
+
+      // ✅ Delay navigation to allow animation to play
+      setTimeout(() => {
+        navigate('/chemical-form');
+      }, 3000); // 3 seconds delay
+    } else {
+      alert(result.error || 'Login failed');
+    }
+  } catch (error) {
+    alert('Server error. Please try again.');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   // Success Animation Component
   const SuccessAnimation = () => (
@@ -97,7 +106,7 @@ function LoginPage() {
           >
             <CheckCircle className="w-10 h-10 text-white" />
           </motion.div>
-          
+
           {/* Sparkle Effects */}
           {[...Array(6)].map((_, i) => (
             <motion.div
@@ -264,7 +273,7 @@ function LoginPage() {
 
       <div className="relative w-full max-w-md">
         {/* Main Card */}
-        <motion.div 
+        <motion.div
           className="glass-card rounded-2xl overflow-hidden card-hover"
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -274,7 +283,7 @@ function LoginPage() {
           {/* Header */}
           <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-8 py-8 text-center relative">
             <div className="flex justify-center mb-4">
-              <motion.div 
+              <motion.div
                 className="bg-white rounded-full p-3 shadow-lg"
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -312,11 +321,10 @@ function LoginPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={`form-input pl-10 pr-3 input-focus ${
-                      errors.email
+                    className={`form-input pl-10 pr-3 input-focus ${errors.email
                         ? 'border-red-500 focus:ring-red-200 focus:border-red-500'
                         : ''
-                    }`}
+                      }`}
                     placeholder="Enter your email"
                   />
                   {errors.email && (
@@ -347,11 +355,10 @@ function LoginPage() {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className={`form-input pl-10 pr-10 input-focus ${
-                      errors.password
+                    className={`form-input pl-10 pr-10 input-focus ${errors.password
                         ? 'border-red-500 focus:ring-red-200 focus:border-red-500'
                         : ''
-                    }`}
+                      }`}
                     placeholder="Enter your password"
                   />
                   <button
@@ -423,9 +430,9 @@ function LoginPage() {
               <p className="text-sm text-gray-600">
                 Don't have an account?{' '}
                 <Link to='/'>
-                <button className="text-orange-600 hover:text-orange-500 font-medium transition-colors">
-                  Sign Up
-                </button>
+                  <button className="text-orange-600 hover:text-orange-500 font-medium transition-colors">
+                    Sign Up
+                  </button>
                 </Link>
               </p>
             </div>
@@ -453,7 +460,7 @@ function LoginPage() {
         </div>
 
         {/* Security Badge */}
-        <motion.div 
+        <motion.div
           className="absolute -top-2 -right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center shadow-lg"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
