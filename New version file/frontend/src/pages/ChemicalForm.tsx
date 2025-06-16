@@ -334,7 +334,7 @@ const ChemicalForm: React.FC = () => {
           />
         </motion.div>
 
-        <div className="flex justify-end space-x-4 pt-4">
+        <div className="flex justify-center space-x-4 pt-4">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
