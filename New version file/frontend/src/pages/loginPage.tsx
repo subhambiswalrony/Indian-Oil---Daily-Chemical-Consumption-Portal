@@ -35,7 +35,7 @@ function LoginPage() {
     if (!password) {
       newErrors.password = 'Password is required';
     } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = 'Password must be at least 8 characters';
     }
 
     setErrors(newErrors);
@@ -158,7 +158,7 @@ function LoginPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
         >
-          Redirecting to dashboard...
+          Redirecting to Chemical Form...
         </motion.p>
 
         {/* Confetti Effect */}
