@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, User, Menu, X, Clock, Building2 } from 'lucide-react';
+import {
+  Bell,
+  User,
+  Menu,
+  X,
+  Clock,
+  Building2,
+  ClipboardList,
+  Settings,
+  LogOut,
+  Building
+}
+  from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Header: React.FC = () => {
@@ -48,17 +60,22 @@ const Header: React.FC = () => {
             </button>
 
             {/* Logo & Titles */}
-            <motion.div whileHover={{ scale: 1.05 }} className="flex items-center space-x-3">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg"
-                alt="IOCL Logo"
-                className="w-12 h-12"
-              />
+            <motion.div whileHover={{ scale: 1.05 }} className="flex items-center space-x-2 sm:space-x-3">
+              {/* Logo Circle */}
+              <div className="bg-white p-1 rounded-full shadow-md flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg"
+                  alt="IOCL Logo"
+                  className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 object-contain"
+                />
+              </div>
+
+              {/* Text only visible on sm+ screens */}
               <div className="hidden sm:block">
-                <h1 className="font-bold text-base sm:text-lg lg:text-xl text-white">
+                <h1 className="font-bold text-sm sm:text-base lg:text-lg xl:text-xl text-white leading-tight">
                   Indian Oil Corporation Limited
                 </h1>
-                <p className="text-xs sm:text-sm text-orange-100">
+                <p className="text-[10px] sm:text-xs text-orange-100 leading-snug">
                   Chemical Management System
                 </p>
               </div>
@@ -129,7 +146,8 @@ const Header: React.FC = () => {
                     className="w-8 h-8"
                   />
 
-                  <span className="font-semibold">Menu</span>
+                  <span className="font-semibold">Indian Oil Corporation Limited</span>
+
                 </div>
                 <button
                   onClick={toggleMobileSidebar}
@@ -145,27 +163,30 @@ const Header: React.FC = () => {
                   <li>
                     <a
                       href="/reportpage"
-                      className="flex items-center px-4 py-3 hover:bg-blue-700"
+                      className="flex items-center gap-x-4 px-4 py-3 hover:bg-blue-700 transition-colors"
                       onClick={toggleMobileSidebar}
                     >
+                      <ClipboardList className="w-5 h-5" />
                       <span>Report Page</span>
                     </a>
                   </li>
                   <li>
                     <a
                       href="#"
-                      className="flex items-center px-4 py-3 hover:bg-blue-700"
+                      className="flex items-center gap-x-4 px-4 py-3 hover:bg-blue-700 transition-colors"
                       onClick={toggleMobileSidebar}
                     >
+                      <Settings className="w-5 h-5" />
                       <span>Settings</span>
                     </a>
                   </li>
                   <li>
                     <a
                       href="/login"
-                      className="flex items-center px-4 py-3 hover:bg-blue-700"
+                      className="flex items-center gap-x-4 px-4 py-3 hover:bg-blue-700 transition-colors"
                       onClick={toggleMobileSidebar}
                     >
+                      <LogOut className="w-5 h-5" />
                       <span>Log out</span>
                     </a>
                   </li>
