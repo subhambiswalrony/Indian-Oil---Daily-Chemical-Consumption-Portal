@@ -124,8 +124,8 @@ function App() {
       } else {
         setIsSuccess(true); // ✅ shows success message
         setTimeout(() => {
-  navigate('/chemical-form');
-}, 3000);
+          navigate('/chemical-form');
+        }, 3000);
       }
     } catch (err) {
       alert('Server error. Please try again.');
