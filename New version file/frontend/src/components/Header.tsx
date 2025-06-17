@@ -50,9 +50,9 @@ const Header: React.FC = () => {
             {/* Logo & Titles */}
             <motion.div whileHover={{ scale: 1.05 }} className="flex items-center space-x-3">
               <img
-            src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg"
-            alt="IOCL Logo"
-            className="w-12 h-12"
+                src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Indian_Oil_Logo.svg"
+                alt="IOCL Logo"
+                className="w-12 h-12"
               />
               <div className="hidden sm:block">
                 <h1 className="font-bold text-base sm:text-lg lg:text-xl text-white">
