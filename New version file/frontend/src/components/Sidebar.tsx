@@ -14,7 +14,7 @@ const Sidebar: React.FC = () => {
     <motion.aside
       initial={{ x: -220 }}
       animate={{ x: 0 }}
-      className="bg-gradient-to-b from-blue-600 to-blue-800 fixed left-0 top-[72px] h-[calc(100vh-72px)] w-[220px] text-white shadow-xl z-40 overflow-y-auto"
+      className="hidden md:block bg-gradient-to-b from-blue-600 to-blue-800 fixed left-0 top-[72px] h-[calc(100vh-72px)] w-[220px] text-white shadow-xl z-40 overflow-y-auto"
     >
       <nav className="py-6">
         <ul className="space-y-2">

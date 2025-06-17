@@ -21,8 +21,13 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <Sidebar />
-      <main className="pt-[80px] pb-16 pl-[240px] pr-5 sm:pr-10 md:pr-20">
+      {/* Sidebar only on medium screens and above */}
+      <div className="hidden md:block">
+        <Sidebar />
+      </div>
+
+      {/* Adjust main padding based on screen size */}
+      <main className="pt-[80px] pb-16 px-4 md:pl-[240px] md:pr-10 transition-all duration-300">
         {children}
       </main>
       <UserWelcome />
@@ -30,6 +35,7 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
     </>
   );
 }
+
 
 function App() {
   return (
