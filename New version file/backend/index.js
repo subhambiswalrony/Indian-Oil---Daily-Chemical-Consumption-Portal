@@ -57,17 +57,28 @@ app.post('/signup', (req, res) => {
 
 // Route: Login - Validate user credentials
 app.post('/login', (req, res) => {
+  console.log("Login hit:", req.body); // ✅ add this
   const { email, password } = req.body;
 
   const sql = 'SELECT * FROM users WHERE email = ?';
   db.query(sql, [email], (err, results) => {
-    if (err) return res.status(500).json({ error: 'Database error' });
-    if (results.length === 0) return res.status(401).json({ error: 'User not found' });
+    if (err) {
+      console.error('DB error:', err); // ✅ print full error
+      return res.status(500).json({ error: 'Database error', details: err.message });
+    }
+
+    console.log('DB query results:', results); // ✅ see what you get
+
+    if (results.length === 0) {
+      return res.status(401).json({ error: 'User not found', status: 'unregistered' });
+    }
 
     const user = results[0];
     const isMatch = bcrypt.compareSync(password, user.password);
 
-    if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!isMatch) {
+      return res.status(401).json({ error: 'incorrect password' });
+    }
 
     res.status(200).json({ message: 'Login successful', userId: user.id });
   });

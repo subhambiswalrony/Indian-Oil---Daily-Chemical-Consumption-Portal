@@ -7,6 +7,12 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
+  Trophy,
+  UserPlus,
+  X,
+  Sparkles,
+  Mail,
+  Phone,
   CheckCircle,
   AlertCircle,
 } from 'lucide-react';
@@ -20,7 +26,7 @@ function LoginPage() {
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-
+  const [showSignupPopup, setShowSignupPopup] = useState(false);
   const validateForm = () => {
     const newErrors = { email: '', password: '' };
 
@@ -41,40 +47,42 @@ function LoginPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  setIsLoading(true);
+    setIsLoading(true);
 
-  try {
-    const response = await fetch('http://localhost:5000/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (response.ok) {
-      localStorage.setItem('userId', result.userId);
-      localStorage.setItem('isAuthenticated', 'true'); // set auth flag
-
-      setShowSuccess(true); // ✅ Show animation
-
-      // ✅ Delay navigation to allow animation to play
-      setTimeout(() => {
-        navigate('/chemical-form');
-      }, 3000); // 3 seconds delay
-    } else {
-      alert(result.error || 'Login failed');
-    }
-  } catch (error) {
-    alert('Server error. Please try again.');
-  } finally {
-    setIsLoading(false);
+      if (response.ok) {
+  localStorage.setItem('userId', result.userId);
+  localStorage.setItem('isAuthenticated', 'true');
+  setShowSuccess(true);
+  setTimeout(() => {
+    navigate('/chemical-form');
+  }, 3000);
+} else {
+  if (result.status === 'unregistered') {
+    setShowSignupPopup(true); // 🔥 Show your popup here
+  } else {
+    setErrors(prev => ({ ...prev, password: 'Invalid credentials' }));
   }
-};
+}
+
+    } catch (error) {
+      alert('Server error. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
 
   // Success Animation Component
@@ -197,6 +205,131 @@ function LoginPage() {
       </motion.div>
     </motion.div>
   );
+
+  const SignupPopup = () => (
+    <motion.div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="bg-white rounded-3xl p-8 shadow-2xl max-w-md w-full mx-4 relative"
+        initial={{ scale: 0.5, opacity: 0, y: 50 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.5, opacity: 0, y: -50 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      >
+        {/* Close Button */}
+        <button
+          onClick={() => setShowSignupPopup(false)}
+          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Header */}
+        <div className="text-center mb-6">
+          <motion.div
+            className="mx-auto w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mb-4"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 300, damping: 20 }}
+          >
+            <UserPlus className="w-8 h-8 text-white" />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">Not Registered Yet?</h3>
+            <p className="text-gray-600">
+              It looks like you haven't registered with us. Please sign up to access the IOCL Portal.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Benefits */}
+        <motion.div
+          className="space-y-3 mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <div className="flex items-center space-x-3 p-3 bg-orange-50 rounded-lg">
+            <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-gray-700 text-sm">Access to all IOCL services</span>
+          </div>
+          <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
+            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+              <Trophy className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-gray-700 text-sm">Priority customer support</span>
+          </div>
+          <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-gray-700 text-sm">Exclusive offers and updates</span>
+          </div>
+        </motion.div>
+
+        {/* Contact Information */}
+        <motion.div
+          className="bg-gray-50 rounded-xl p-4 mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <h4 className="font-semibold text-gray-800 mb-3">Contact us to register:</h4>
+          <div className="space-y-2">
+            <div className="flex items-center space-x-3">
+              <Mail className="w-4 h-4 text-orange-500" />
+              <span className="text-sm text-gray-600">support@iocl.com</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Phone className="w-4 h-4 text-orange-500" />
+              <span className="text-sm text-gray-600">1800-123-4567</span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Action Buttons */}
+        <motion.div
+          className="flex space-x-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <button
+            onClick={() => setShowSignupPopup(false)}
+            className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-all duration-200 transform hover:scale-[1.02]"
+          >
+            Back to Login
+          </button>
+          <Link to=''>
+          
+          </Link>
+          <button
+            onClick={() => {
+              // alert('Registration form would open here. Please contact administrator for now.');
+              setShowSignupPopup(false);
+              navigate('/');
+            }}
+            className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-medium hover:from-orange-600 hover:to-orange-700 transition-all duration-200 transform hover:scale-[1.02] flex items-center justify-center"
+          >
+            <UserPlus className="w-4 h-4 mr-2" />
+            Sign Up
+          </button>
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+
 
   return (
     <div className="min-h-screen relative bg-gradient-to-br from-orange-50 via-white to-blue-50 flex items-center justify-center p-4 overflow-hidden">
@@ -322,8 +455,8 @@ function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className={`form-input pl-10 pr-3 input-focus ${errors.email
-                        ? 'border-red-500 focus:ring-red-200 focus:border-red-500'
-                        : ''
+                      ? 'border-red-500 focus:ring-red-200 focus:border-red-500'
+                      : ''
                       }`}
                     placeholder="Enter your email"
                   />
@@ -356,8 +489,8 @@ function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className={`form-input pl-10 pr-10 input-focus ${errors.password
-                        ? 'border-red-500 focus:ring-red-200 focus:border-red-500'
-                        : ''
+                      ? 'border-red-500 focus:ring-red-200 focus:border-red-500'
+                      : ''
                       }`}
                     placeholder="Enter your password"
                   />
@@ -475,6 +608,7 @@ function LoginPage() {
       {/* Success Animation Overlay */}
       <AnimatePresence>
         {showSuccess && <SuccessAnimation />}
+        {showSignupPopup && <SignupPopup />}
       </AnimatePresence>
     </div>
   );

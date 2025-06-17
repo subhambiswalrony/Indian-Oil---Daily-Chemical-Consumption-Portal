@@ -10,7 +10,8 @@ import {
   EyeOff,
   ArrowRight,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  AlertTriangle
 } from 'lucide-react';
 
 interface FormData {
@@ -44,6 +45,7 @@ function App() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [showDuplicateWarning, setShowDuplicateWarning] = useState(false);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -86,9 +88,14 @@ function App() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleLoginRedirect = () => {
+    navigate('/login');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Run client-side validation first
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -102,28 +109,23 @@ function App() {
           lastName: formData.lastName,
           email: formData.email,
           phone: formData.phone,
-          password: formData.password
-        })
+          password: formData.password,
+        }),
       });
 
       const result = await response.json();
 
-      if (response.ok) {
-        setIsSuccess(true); // show success message
-
-        localStorage.setItem('userId', result.userId);
-        localStorage.setItem('isAuthenticated', 'true'); // ✅ this line enables access to protected routes
-
-        // delay redirect to let animation appear
-        setTimeout(() => {
-          navigate('/chemical-form'); // or '/login' if you prefer
-        }, 3000); // wait 3 seconds
-      }
-      else {
-        alert(result.error || 'Signup failed');
+      if (!response.ok) {
+        if (result.error === 'Email already registered') {
+          setShowDuplicateWarning(true); // ✅ triggers inline warning
+        } else {
+          alert(result.error || 'Signup failed');
+        }
+      } else {
+        setIsSuccess(true); // ✅ shows success message
       }
     } catch (err) {
-      alert('Server error. Try again later.');
+      alert('Server error. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -341,6 +343,46 @@ function App() {
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">
                   Create Your Account
                 </h2>
+                {showDuplicateWarning && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="mb-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-amber-500 rounded-lg shadow-sm relative"
+                  >
+                    <div className="flex items-start">
+                      <AlertTriangle className="h-5 w-5 text-amber-500 mt-1 mr-3" />
+                      <div className="flex-1">
+                        <h3 className="text-sm font-semibold text-amber-800 mb-1">
+                          Email Already Registered
+                        </h3>
+                        <p className="text-sm text-amber-700 mb-3">
+                          This email address is already associated with an account. Please use a different email or sign in to your existing account.
+                        </p>
+                        <motion.button
+                          onClick={handleLoginRedirect}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="inline-flex items-center px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-sm font-medium rounded-md transition"
+                        >
+                          <ArrowRight className="h-4 w-4 mr-1" />
+                          Sign In Instead
+                        </motion.button>
+                      </div>
+
+                      {/* Close Button */}
+                      <button
+                        onClick={() => setShowDuplicateWarning(false)}
+                        className="absolute top-2 right-2 text-amber-400 hover:text-amber-600"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+
                 <p className="text-gray-600">
                   Join the IOCL family and access our comprehensive services
                 </p>
