@@ -86,6 +86,7 @@ app.post('/login', (req, res) => {
 
 // Example endpoint to get all chemical_form entries
 app.get('/chemical_forms', (req, res) => {
+  console.log("Form Submitted :", req.body); // ✅ add this
   db.query('SELECT * FROM chemical_form', (err, results) => {
     if (err) return res.status(500).json({ error: err });
     res.json(results);
