@@ -1,8 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const UserWelcome: React.FC = () => {
+  const [firstName, setFirstName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      setLoading(false);
+      setFirstName(null);
+      return;
+    }
+
+    fetch(`http://localhost:5000/user/${userId}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch user');
+        return res.json();
+      })
+      .then(data => {
+        setFirstName(data.firstName || null);
+      })
+      .catch(err => {
+        console.error(err);
+        setFirstName(null);
+      })
+      .finally(() => setLoading(false));
+  }, []); // run once on mount
+
+  if (loading) return null; // or a spinner component
+
+  if (!firstName) return null; // or show generic welcome or login prompt
+
   return (
     <motion.div
       initial={{ y: 50, opacity: 0 }}
@@ -18,8 +49,8 @@ const UserWelcome: React.FC = () => {
           <User className="w-4 h-4 sm:w-5 sm:h-5" />
         </div>
         <span className="font-medium text-sm sm:text-base">
-          <span className="hidden sm:inline">Welcome: User</span>
-          <span className="sm:hidden">User</span>
+          <span className="hidden sm:inline">Welcome: {firstName}</span>
+          <span className="sm:hidden">{firstName}</span>
         </span>
       </motion.div>
     </motion.div>

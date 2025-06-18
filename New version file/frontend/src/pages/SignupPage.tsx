@@ -28,6 +28,10 @@ interface FormErrors {
   [key: string]: string;
 }
 
+type SignUpPageProps = {
+  onLogin: (userId: string) => void;  // Receive the onLogin callback as prop
+};
+
 function App() {
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -95,7 +99,6 @@ function App() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Run client-side validation first
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -117,12 +120,19 @@ function App() {
 
       if (!response.ok) {
         if (result.error === 'Email already registered') {
-          setShowDuplicateWarning(true); // ✅ triggers inline warning
+          setShowDuplicateWarning(true);
         } else {
           alert(result.error || 'Signup failed');
         }
       } else {
-        setIsSuccess(true); // ✅ shows success message
+        // Store user info in localStorage for persistence
+        localStorage.setItem('userId', result.userId);
+        localStorage.setItem('isAuthenticated', 'true');
+
+        // Notify the parent app about successful login/signup
+        // onLogin(result.userId);
+
+        setIsSuccess(true);
         setTimeout(() => {
           navigate('/chemical-form');
         }, 3000);

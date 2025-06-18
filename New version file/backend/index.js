@@ -23,10 +23,25 @@ db.connect((err) => {
   console.log('Connected to MySQL');
 });
 
-// Route: Signup - Register new user
+// Add the new route here
+app.get('/user/:id', (req, res) => {
+  const userId = req.params.id;
+  const sql = 'SELECT first_name FROM users WHERE id = ?';
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error('DB error:', err);
+      return res.status(500).json({ error: 'Database error', details: err.message });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ firstName: results[0].first_name });
+  });
+});
 
+// Route: Signup - Register new user
 app.post('/signup', (req, res) => {
-  console.log('Signup request received:', req.body); // ✅ place inside the function
+  console.log('Signup request received:', req.body);
 
   const { firstName, lastName, email, phone, password } = req.body;
 
@@ -43,31 +58,33 @@ app.post('/signup', (req, res) => {
 
   db.query(sql, [firstName, lastName, email, phone, hashedPassword, password], (err, result) => {
     if (err) {
-      console.error('MySQL error during signup:', err); // 👈 log full error
+      console.error('MySQL error during signup:', err);
       if (err.code === 'ER_DUP_ENTRY') {
         return res.status(400).json({ error: 'Email already registered' });
       }
       return res.status(500).json({ error: 'Database error', details: err.message });
     }
 
-
-    res.status(201).json({ message: 'Signup successful', userId: result.insertId });
+    res.status(201).json({
+      message: 'Signup successful',
+      userId: result.insertId,
+      firstName: firstName,
+      email: email
+    });
   });
 });
 
 // Route: Login - Validate user credentials
 app.post('/login', (req, res) => {
-  console.log("Login hit:", req.body); // ✅ add this
+  console.log("Login hit:", req.body);
   const { email, password } = req.body;
 
   const sql = 'SELECT * FROM users WHERE email = ?';
   db.query(sql, [email], (err, results) => {
     if (err) {
-      console.error('DB error:', err); // ✅ print full error
+      console.error('DB error:', err);
       return res.status(500).json({ error: 'Database error', details: err.message });
     }
-
-    console.log('DB query results:', results); // ✅ see what you get
 
     if (results.length === 0) {
       return res.status(401).json({ error: 'User not found', status: 'unregistered' });
@@ -77,16 +94,21 @@ app.post('/login', (req, res) => {
     const isMatch = bcrypt.compareSync(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ error: 'incorrect password' });
+      return res.status(401).json({ error: 'Incorrect password' });
     }
 
-    res.status(200).json({ message: 'Login successful', userId: user.id });
+    res.status(200).json({
+      message: 'Login successful',
+      userId: user.id,
+      firstName: user.first_name,
+      email: user.email
+    });
   });
 });
 
 // Example endpoint to get all chemical_form entries
 app.get('/chemical_forms', (req, res) => {
-  console.log("Form Submitted :", req.body); // ✅ add this
+  console.log("Form Submitted :", req.body);
   db.query('SELECT * FROM chemical_form', (err, results) => {
     if (err) return res.status(500).json({ error: err });
     res.json(results);
@@ -94,11 +116,9 @@ app.get('/chemical_forms', (req, res) => {
 });
 
 // Example endpoint to insert a new chemical_form entry
-// Endpoint to insert a new chemical_form entry
 app.post('/chemical_forms', (req, res) => {
   const data = req.body;
 
-  // ✅ Log the incoming chemical form data
   console.log('Received chemical form submission:', data);
 
   db.query('INSERT INTO chemical_form SET ?', data, (err, results) => {
@@ -107,13 +127,11 @@ app.post('/chemical_forms', (req, res) => {
       return res.status(500).json({ error: err });
     }
 
-    // ✅ Log the success and new insert ID
     console.log('Chemical form inserted with ID:', results.insertId);
 
     res.json({ id: results.insertId, ...data });
   });
 });
-
 
 app.listen(5000, () => {
   console.log('Server running on port 5000');
