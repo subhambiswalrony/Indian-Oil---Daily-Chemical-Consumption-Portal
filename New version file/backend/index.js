@@ -37,11 +37,11 @@ app.post('/signup', (req, res) => {
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   const sql = `
-    INSERT INTO users (first_name, last_name, email, phone, password)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO users (first_name, last_name, email, phone, password, plain_password)
+    VALUES (?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(sql, [firstName, lastName, email, phone, hashedPassword], (err, result) => {
+  db.query(sql, [firstName, lastName, email, phone, hashedPassword, password], (err, result) => {
     if (err) {
       console.error('MySQL error during signup:', err); // 👈 log full error
       if (err.code === 'ER_DUP_ENTRY') {
