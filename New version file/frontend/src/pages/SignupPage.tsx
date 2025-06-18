@@ -130,8 +130,6 @@ function App() {
         localStorage.setItem('isAuthenticated', 'true');
 
         // Notify the parent app about successful login/signup
-        // onLogin(result.userId);
-
         setIsSuccess(true);
         setTimeout(() => {
           navigate('/chemical-form');
