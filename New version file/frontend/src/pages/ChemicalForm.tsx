@@ -47,7 +47,7 @@ const SuccessModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOp
           >
             {/* Background decoration */}
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 to-emerald-500"></div>
-            
+
             {/* Close button */}
             <button
               onClick={onClose}
@@ -141,9 +141,9 @@ const ChemicalForm: React.FC = () => {
     const opening = parseFloat(formData.opening) || 0;
     const receive = parseFloat(formData.receive) || 0;
     const consumption = parseFloat(formData.consumption) || 0;
-    
+
     const closing = (opening + receive - consumption).toFixed(2);
-    
+
     setFormData(prev => ({
       ...prev,
       closing,
@@ -162,20 +162,20 @@ const ChemicalForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const userId = localStorage.getItem('userId'); // ✅ fetch from localStorage
+
     try {
       const response = await fetch('http://localhost:5000/chemical_forms', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, user_id: userId }), // ✅ attach to payload
       });
 
       const result = await response.json();
 
       if (response.ok) {
         setShowSuccessModal(true);
-        handleClear(); // clear the form after submission
+        handleClear();
       } else {
         alert('Error: ' + result.error);
       }
@@ -184,6 +184,7 @@ const ChemicalForm: React.FC = () => {
       alert('Failed to submit the form');
     }
   };
+
 
   const handleClear = () => {
     setFormData({
@@ -214,7 +215,7 @@ const ChemicalForm: React.FC = () => {
             <h2 className="text-2xl font-bold text-white">Daily Chemical Management & Data Entry Panel</h2>
           </div>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <motion.div
@@ -234,7 +235,7 @@ const ChemicalForm: React.FC = () => {
                 required
               />
             </motion.div>
-            
+
             <motion.div
               whileHover={{ scale: 1.02 }}
               className="space-y-2"
@@ -290,7 +291,7 @@ const ChemicalForm: React.FC = () => {
                 required
               />
             </motion.div>
-            
+
             <motion.div
               whileHover={{ scale: 1.02 }}
               className="space-y-2"
@@ -330,7 +331,7 @@ const ChemicalForm: React.FC = () => {
                 step="any"
               />
             </motion.div>
-            
+
             <motion.div
               whileHover={{ scale: 1.02 }}
               className="space-y-2"
@@ -350,7 +351,7 @@ const ChemicalForm: React.FC = () => {
                 step="any"
               />
             </motion.div>
-            
+
             <motion.div
               whileHover={{ scale: 1.02 }}
               className="space-y-2"
@@ -465,9 +466,9 @@ const ChemicalForm: React.FC = () => {
         </form>
       </motion.div>
 
-      <SuccessModal 
-        isOpen={showSuccessModal} 
-        onClose={() => setShowSuccessModal(false)} 
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
       />
     </>
   );

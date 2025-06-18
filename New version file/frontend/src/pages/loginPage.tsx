@@ -38,7 +38,7 @@ function LoginPage() {
 
     if (!password) {
       newErrors.password = 'Password is required';
-    } else if (password.length < 6) {
+    } else if (password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
     }
 
@@ -63,19 +63,20 @@ function LoginPage() {
       const result = await response.json();
 
       if (response.ok) {
-  localStorage.setItem('userId', result.userId);
-  localStorage.setItem('isAuthenticated', 'true');
-  setShowSuccess(true);
-  setTimeout(() => {
-    navigate('/chemical-form');
-  }, 3000);
-} else {
-  if (result.status === 'unregistered') {
-    setShowSignupPopup(true); // 🔥 Show your popup here
-  } else {
-    setErrors(prev => ({ ...prev, password: 'Invalid credentials' }));
-  }
-}
+        localStorage.setItem('userId', result.userId);
+        localStorage.setItem('isAuthenticated', 'true');
+        setShowSuccess(true);
+        setTimeout(() => {
+          navigate('/chemical-form');
+        }, 3000);
+      } else {
+        if (result.status === 'unregistered') {
+          setShowSignupPopup(true); // 🔥 Show your popup here
+        } else {
+          console.log("Login failed:", result);
+          setErrors(prev => ({ ...prev, password: 'Invalid credentials' }));
+        }
+      }
 
     } catch (error) {
       alert('Server error. Please try again.');
@@ -312,7 +313,7 @@ function LoginPage() {
             Back to Login
           </button>
           <Link to=''>
-          
+
           </Link>
           <button
             onClick={() => {
