@@ -144,7 +144,7 @@ app.post('/chemical_forms', (req, res) => {
       return res.status(500).json({ error: err });
     }
 
-    console.log('Chemical form inserted with ID:', results.insertId);
+    console.log('Chemical form inserted at row no. :', results.insertId);
 
     res.json({ id: results.insertId, ...data });
   });
