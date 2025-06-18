@@ -72,30 +72,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">
-      {/* Header */}
-      {/* <header className="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="bg-white/20 p-2 rounded-full">
-                <Home className="w-6 h-6" />
-              </div>
-              <h1 className="text-2xl font-bold tracking-wide">
-                Daily Chemical Consumption Portal
-              </h1>
-            </div>
-            <div className="text-right">
-              <h2 className="text-xl font-semibold mb-1">
-                Indian Oil Corporation Limited
-              </h2>
-              <p className="text-orange-100 text-sm font-medium">
-                {getCurrentDateTime()}
-              </p>
-            </div>
-          </div>
-        </div>
-      </header> */}
-
       {/* Main Content */}
       <main className="container mx-auto px-4 sm:px-6 py-8">
         {/* Filter Section */}
@@ -191,16 +167,6 @@ function App() {
           )}
         </div>
       </main>
-
-
-      {/* Footer */}
-      {/* <footer className="bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 mt-12">
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-orange-100 font-medium">
-            Thanks you for visiting Our Daily Chemical Consumption Entry Page Developed By IS Department
-          </p>
-        </div>
-      </footer> */}
     </div>
   );
 }

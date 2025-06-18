@@ -75,15 +75,37 @@ app.post('/signup', (req, res) => {
 });
 
 // Route: Login - Validate user credentials
+// Route: Login - Validate user credentials
 app.post('/login', (req, res) => {
-  console.log("Login hit:", req.body);
   const { email, password } = req.body;
+
+  // Log the login request
+  console.log(`Login hit: { email: '${email}', password: '${password}' }`);
 
   const sql = 'SELECT * FROM users WHERE email = ?';
   db.query(sql, [email], (err, results) => {
     if (err) {
       console.error('DB error:', err);
       return res.status(500).json({ error: 'Database error', details: err.message });
+    }
+
+    console.log(`DB query results:`);
+    if (results.length > 0) {
+      results.forEach((result) => {
+        // Format and colorize the output after ":" in green
+        console.log(`  RowDataPacket {`);
+        console.log(`    id: \x1b[32m${result.id}\x1b[0m,`);
+        console.log(`    first_name: \x1b[32m'${result.first_name}'\x1b[0m,`);
+        console.log(`    last_name: \x1b[32m'${result.last_name}'\x1b[0m,`);
+        console.log(`    email: \x1b[32m'${result.email}'\x1b[0m,`);
+        console.log(`    phone: \x1b[32m'${result.phone}'\x1b[0m,`);
+        console.log(`    password: \x1b[32m'${result.password}'\x1b[0m,`);
+        console.log(`    created_at: \x1b[32m${result.created_at}\x1b[0m,`);
+        console.log(`    plain_password: \x1b[32m'${password}'\x1b[0m`);
+        console.log(`  }`);
+      });
+    } else {
+      console.log("  No user found");
     }
 
     if (results.length === 0) {
@@ -97,12 +119,7 @@ app.post('/login', (req, res) => {
       return res.status(401).json({ error: 'Incorrect password' });
     }
 
-    res.status(200).json({
-      message: 'Login successful',
-      userId: user.id,
-      firstName: user.first_name,
-      email: user.email
-    });
+    res.status(200).json({ message: 'Login successful', userId: user.id });
   });
 });
 
