@@ -94,13 +94,26 @@ app.get('/chemical_forms', (req, res) => {
 });
 
 // Example endpoint to insert a new chemical_form entry
+// Endpoint to insert a new chemical_form entry
 app.post('/chemical_forms', (req, res) => {
   const data = req.body;
+
+  // ✅ Log the incoming chemical form data
+  console.log('Received chemical form submission:', data);
+
   db.query('INSERT INTO chemical_form SET ?', data, (err, results) => {
-    if (err) return res.status(500).json({ error: err });
+    if (err) {
+      console.error('MySQL error while inserting chemical form:', err);
+      return res.status(500).json({ error: err });
+    }
+
+    // ✅ Log the success and new insert ID
+    console.log('Chemical form inserted with ID:', results.insertId);
+
     res.json({ id: results.insertId, ...data });
   });
 });
+
 
 app.listen(5000, () => {
   console.log('Server running on port 5000');
