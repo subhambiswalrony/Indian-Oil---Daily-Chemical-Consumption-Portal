@@ -1,162 +1,92 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Home, ChevronDown, Download, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// TableRow Component for rendering a row
-type TableRowProps = {
-  row: {
-    date: string;
-    unit: string;
-    chemical: string;
-    uom: string;
-    sapcode: string;
-    opening: string;
-    receive: string;
-    consumption: string;
-    closing: string;
-    sapbalance: string;
-    remarks: string;
-  };
+type RowType = {
+  date: string;
+  unit: string;
+  chemical: string;
+  uom: string;
+  sapcode: string;
+  opening: string;
+  receive: string;
+  consumption: string;
+  closing: string;
+  sapbalance: string;
+  remarks: string;
 };
 
-const TableRow = ({ row }: TableRowProps) => {
-  return (
-    <tr className="hover:bg-blue-50 transition-colors duration-200">
-      <td className="px-4 py-3 font-medium text-gray-900 border-r border-gray-200">
-        {new Date(row.date).toLocaleDateString('en-GB')}
-      </td>
-      <td className="px-4 py-3 text-gray-800 border-r border-gray-200">{row.unit}</td>
-      <td className="px-4 py-3 text-gray-800 border-r border-gray-200">{row.chemical}</td>
-      <td className="px-4 py-3 text-gray-800 border-r border-gray-200">{row.uom}</td>
-      <td className="px-4 py-3 text-gray-800 border-r border-gray-200 font-mono text-sm">{row.sapcode}</td>
-      <td className="px-4 py-3 text-green-600 font-semibold border-r border-gray-200">
-        {parseFloat(row.opening).toFixed(2)}
-      </td>
-      <td className="px-4 py-3 text-blue-600 font-semibold border-r border-gray-200">
-        {parseFloat(row.receive).toFixed(2)}
-      </td>
-      <td className="px-4 py-3 text-orange-600 font-semibold border-r border-gray-200">
-        {parseFloat(row.consumption).toFixed(2)}
-      </td>
-      <td className="px-4 py-3 text-purple-600 font-semibold border-r border-gray-200">
-        {parseFloat(row.closing).toFixed(2)}
-      </td>
-      <td className="px-4 py-3 text-red-600 font-semibold border-r border-gray-200">
-        {parseFloat(row.sapbalance).toFixed(2)}
-      </td>
-      <td className="px-4 py-3 text-gray-800 max-w-xs">
-        <div className="truncate" title={row.remarks}>
-          {row.remarks}
-        </div>
-      </td>
-    </tr>
-  );
-};
+const TableRow = ({ row }: { row: RowType }) => (
+  <tr className="hover:bg-blue-50 transition-colors duration-200">
+    <td className="px-4 py-3 font-medium text-gray-900 border-r border-gray-200">{new Date(row.date).toLocaleDateString('en-GB')}</td>
+    <td className="px-4 py-3 text-gray-800 border-r border-gray-200">{row.unit}</td>
+    <td className="px-4 py-3 text-gray-800 border-r border-gray-200">{row.chemical}</td>
+    <td className="px-4 py-3 text-gray-800 border-r border-gray-200">{row.uom}</td>
+    <td className="px-4 py-3 text-gray-800 border-r border-gray-200 font-mono text-sm">{row.sapcode}</td>
+    <td className="px-4 py-3 text-green-600 font-semibold border-r border-gray-200">{parseFloat(row.opening).toFixed(2)}</td>
+    <td className="px-4 py-3 text-blue-600 font-semibold border-r border-gray-200">{parseFloat(row.receive).toFixed(2)}</td>
+    <td className="px-4 py-3 text-orange-600 font-semibold border-r border-gray-200">{parseFloat(row.consumption).toFixed(2)}</td>
+    <td className="px-4 py-3 text-purple-600 font-semibold border-r border-gray-200">{parseFloat(row.closing).toFixed(2)}</td>
+    <td className="px-4 py-3 text-red-600 font-semibold border-r border-gray-200">{parseFloat(row.sapbalance).toFixed(2)}</td>
+    <td className="px-4 py-3 text-gray-800 max-w-xs">
+      <div className="truncate" title={row.remarks}>{row.remarks}</div>
+    </td>
+  </tr>
+);
 
 function ReportPage() {
   const [selectedUnit, setSelectedUnit] = useState('All Units');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  const [filteredData, setFilteredData] = useState<RowType[]>([]);
+  const [allData, setAllData] = useState<RowType[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
+  const [unitOptions, setUnitOptions] = useState<string[]>(['All Units']);
 
-   const sampleData = [
-    {
-      date: '2025-06-18',
-      unit: 'Unit D',
-      chemical: 'Neon',
-      uom: 'Meter',
-      sapcode: '236985',
-      opening: '2.65',
-      receive: '6.32',
-      consumption: '26.14',
-      closing: '-17.17',
-      sapbalance: '-17.17',
-      remarks: 'Critical shortage - urgent restocking required',
-    },
-    {
-      date: '2025-06-18',
-      unit: 'Unit A',
-      chemical: 'Hydrogen',
-      uom: 'Litre',
-      sapcode: '235489',
-      opening: '4.45',
-      receive: '10.20',
-      consumption: '7.80',
-      closing: '6.85',
-      sapbalance: '6.85',
-      remarks: 'First data of Hydrogen - normal consumption',
-    },
-    {
-      date: '2025-06-18',
-      unit: 'Unit B',
-      chemical: 'Oxygen',
-      uom: 'Ton',
-      sapcode: '234567',
-      opening: '1.10',
-      receive: '5.25',
-      consumption: '4.20',
-      closing: '2.15',
-      sapbalance: '2.15',
-      remarks: 'Oxygen consumption data - within limits',
-    },
-    {
-      date: '2025-06-18',
-      unit: 'Unit C',
-      chemical: 'Argon',
-      uom: 'Kg',
-      sapcode: '245678',
-      opening: '3.00',
-      receive: '7.50',
-      consumption: '3.80',
-      closing: '6.70',
-      sapbalance: '6.70',
-      remarks: 'Argon data for consumption - optimal levels',
-    },
-    {
-      date: '2025-06-17',
-      unit: 'Unit A',
-      chemical: 'Helium',
-      uom: 'Cubic Meter',
-      sapcode: '234890',
-      opening: '12.45',
-      receive: '8.75',
-      consumption: '15.20',
-      closing: '6.00',
-      sapbalance: '6.00',
-      remarks: 'Helium usage for testing equipment',
-    },
-    {
-      date: '2025-06-17',
-      unit: 'Unit B',
-      chemical: 'Nitrogen',
-      uom: 'Ton',
-      sapcode: '256789',
-      opening: '25.30',
-      receive: '15.00',
-      consumption: '18.50',
-      closing: '21.80',
-      sapbalance: '21.80',
-      remarks: 'Nitrogen for inert atmosphere maintenance',
-    },
-  ];
+  const userId = localStorage.getItem('userId');
 
-  const [filteredData, setFilteredData] = useState<typeof sampleData>([]);
+  useEffect(() => {
+    if (!userId) return;
+
+    // Fetch all forms submitted by the user
+    fetch(`http://localhost:5000/chemical_forms/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        setAllData(data);
+        setFilteredData(data);
+        // setHasSearched(true);
+      })
+      .catch(err => console.error('Error fetching forms:', err));
+
+    // Fetch distinct unit list for the user
+    fetch(`http://localhost:5000/units/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data.units)) {
+          setUnitOptions(['All Units', ...data.units]);
+        } else {
+          console.error('Unexpected unit format:', data);
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching units:', err);
+        setUnitOptions(['All Units']);
+      });
+  }, [userId]);
 
   const handleSearch = () => {
-    let filtered = sampleData;
+    let filtered = allData;
 
-    // Filter by unit
     if (selectedUnit !== 'All Units') {
-      filtered = filtered.filter(item => item.unit === selectedUnit);
+      filtered = filtered.filter(row => row.unit === selectedUnit);
     }
 
-    // Filter by date range
     if (fromDate && toDate) {
       const from = new Date(fromDate);
       const to = new Date(toDate);
-      filtered = filtered.filter(item => {
-        const itemDate = new Date(item.date);
-        return itemDate >= from && itemDate <= to;
+      filtered = filtered.filter(row => {
+        const d = new Date(row.date);
+        return d >= from && d <= to;
       });
     }
 
@@ -168,60 +98,53 @@ function ReportPage() {
     setSelectedUnit('All Units');
     setFromDate('');
     setToDate('');
-    setFilteredData([]);
+    setFilteredData(allData);
     setHasSearched(false);
   };
 
   const handleExport = () => {
     if (filteredData.length === 0) return;
 
-    const csvContent = [
+    const csv = [
       ['Date', 'Unit', 'Chemical', 'UOM', 'SAP Code', 'Opening', 'Received', 'Consumption', 'Closing', 'SAP Balance', 'Remarks'],
-      ...filteredData.map(row => [
-        row.date, row.unit, row.chemical, row.uom, row.sapcode,
-        row.opening, row.receive, row.consumption, row.closing, row.sapbalance, row.remarks
+      ...filteredData.map(r => [
+        r.date, r.unit, r.chemical, r.uom, r.sapcode, r.opening,
+        r.receive, r.consumption, r.closing, r.sapbalance, r.remarks
       ])
     ].map(row => row.join(',')).join('\n');
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'chemical-report.csv';
     a.click();
-    window.URL.revokeObjectURL(url);
+    URL.revokeObjectURL(url);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-orange-100">
-      <main className="container mx-auto px-4 sm:px-6 py-8">
+      <main className="container mx-auto px-4 py-8">
         {/* Filter Section */}
         <div className="bg-white rounded-2xl p-6 mb-8 shadow-xl border border-gray-200">
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
-            {/* Filter Options Heading */}
+          <div className="flex flex-col sm:flex-row justify-between mb-4">
             <div className="flex items-center space-x-2 mb-4 sm:mb-0">
               <Filter className="w-5 h-5 text-blue-600" />
               <h2 className="text-lg font-semibold text-gray-900">Filter Options</h2>
             </div>
-
-            {/* Export CSV and Data Entry Buttons */}
             <div className="flex space-x-4">
-              {/* Export CSV Button */}
               <button
                 onClick={handleExport}
                 disabled={!hasSearched || filteredData.length === 0}
-                className={`px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 transition-all duration-200 shadow-md hover:shadow-lg ${hasSearched && filteredData.length > 0
-                  ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
+                className={`px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 shadow-md transition-all ${hasSearched && filteredData.length > 0
+                  ? 'bg-green-600 text-white hover:bg-green-700'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
               >
                 <Download className="w-4 h-4" />
                 <span>Export CSV</span>
               </button>
-
-              {/* Data Entry Button */}
               <Link to="/chemical-form">
-                <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 transition-all duration-200 shadow-md hover:shadow-lg">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 shadow-md">
                   <Home className="w-4 h-4" />
                   <span>Data Entry</span>
                 </button>
@@ -229,69 +152,58 @@ function ReportPage() {
             </div>
           </div>
 
+          {/* Filters */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-            {/* Unit Dropdown */}
-            <div className="relative">
-              <label htmlFor="unit" className="block text-sm font-medium text-gray-700 mb-2">
-                Production Unit
-              </label>
+            <div>
+              <label htmlFor="unit" className="block text-sm font-medium text-gray-700 mb-2">Production Unit</label>
               <div className="relative">
                 <select
                   value={selectedUnit}
-                  onChange={(e) => setSelectedUnit(e.target.value)}
-                  className="w-full appearance-none bg-white border-2 border-gray-300 rounded-lg px-4 py-3 pr-10 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm hover:border-gray-400 transition-colors"
-                  id="unit"
+                  onChange={e => setSelectedUnit(e.target.value)}
+                  className="w-full border-2 rounded-lg px-4 py-3 pr-10 text-gray-700 font-medium appearance-none"
                 >
-                  <option value="All Units">All Units</option>
-                  <option value="Unit A">Unit A</option>
-                  <option value="Unit B">Unit B</option>
-                  <option value="Unit C">Unit C</option>
-                  <option value="Unit D">Unit D</option>
+
+                  {unitOptions.map(unit => (
+                    <option key={unit} value={unit}>{unit}</option>
+                  ))}
                 </select>
-                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
               </div>
             </div>
 
-            {/* From Date */}
             <div>
-              <label htmlFor="fromDate" className="block text-sm font-medium text-gray-700 mb-2">
-                From Date
-              </label>
+              <label htmlFor="fromDate" className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
               <input
                 type="date"
                 id="fromDate"
                 value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-                className="w-full bg-white border-2 border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm hover:border-gray-400 transition-colors"
+                onChange={e => setFromDate(e.target.value)}
+                className="w-full border-2 rounded-lg px-4 py-3"
               />
             </div>
 
-            {/* To Date */}
             <div>
-              <label htmlFor="toDate" className="block text-sm font-medium text-gray-700 mb-2">
-                To Date
-              </label>
+              <label htmlFor="toDate" className="block text-sm font-medium text-gray-700 mb-2">To Date</label>
               <input
                 type="date"
                 id="toDate"
                 value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-                className="w-full bg-white border-2 border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm hover:border-gray-400 transition-colors"
+                onChange={e => setToDate(e.target.value)}
+                className="w-full border-2 rounded-lg px-4 py-3"
               />
             </div>
 
-            {/* Action Buttons */}
             <div className="flex space-x-2">
               <button
                 onClick={handleSearch}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all duration-200 shadow-md hover:shadow-lg"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-semibold"
               >
-                <Search className="w-4 h-4" />
-                <span>Search</span>
+                <Search className="w-4 h-4 inline mr-1" />
+                Search
               </button>
               <button
                 onClick={handleReset}
-                className="px-4 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+                className="px-4 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold"
               >
                 Reset
               </button>
@@ -299,7 +211,6 @@ function ReportPage() {
           </div>
         </div>
 
-        {/* Welcome Message - Show when no search has been performed */}
         {!hasSearched && (
           <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-12 text-center">
             <div className="flex flex-col items-center space-y-6">
@@ -321,47 +232,27 @@ function ReportPage() {
           </div>
         )}
 
-        {/* Data Table - Only show after search */}
+        {/* Table Section */}
         {hasSearched && (
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[1200px]">
-                <thead className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+          <div className="bg-white rounded-2xl shadow-xl overflow-x-auto border border-gray-200">
+            <table className="w-full min-w-[1200px]">
+              <thead className="bg-blue-600 text-white">
+                <tr>
+                  {['Date', 'Unit', 'Chemical', 'UOM', 'SAP Code', 'Opening', 'Received', 'Consumption', 'Closing', 'SAP Balance', 'Remarks'].map(col => (
+                    <th key={col} className="px-4 py-4 text-left font-bold border-r border-blue-500">{col}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {filteredData.length > 0 ? (
+                  filteredData.map((row, i) => <TableRow key={i} row={row} />)
+                ) : (
                   <tr>
-                    <th className="px-4 py-4 text-left font-bold border-r border-blue-500">Date</th>
-                    <th className="px-4 py-4 text-left font-bold border-r border-blue-500">Unit</th>
-                    <th className="px-4 py-4 text-left font-bold border-r border-blue-500">Chemical</th>
-                    <th className="px-4 py-4 text-left font-bold border-r border-blue-500">UOM</th>
-                    <th className="px-4 py-4 text-left font-bold border-r border-blue-500">SAP Code</th>
-                    <th className="px-4 py-4 text-left font-bold border-r border-blue-500">Opening</th>
-                    <th className="px-4 py-4 text-left font-bold border-r border-blue-500">Received</th>
-                    <th className="px-4 py-4 text-left font-bold border-r border-blue-500">Consumption</th>
-                    <th className="px-4 py-4 text-left font-bold border-r border-blue-500">Closing</th>
-                    <th className="px-4 py-4 text-left font-bold border-r border-blue-500">SAP Balance</th>
-                    <th className="px-4 py-4 text-left font-bold">Remarks</th>
+                    <td colSpan={11} className="text-center py-16 text-gray-600">No data found for this filter.</td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {filteredData.length > 0 ? (
-                    filteredData.map((row, index) => <TableRow key={index} row={row} />)
-                  ) : (
-                    <tr>
-                      <td colSpan={11} className="text-center py-16">
-                        <div className="flex flex-col items-center space-y-4">
-                          <div className="bg-gray-100 p-8 rounded-full">
-                            <Search className="w-12 h-12 text-gray-400" />
-                          </div>
-                          <div>
-                            <div className="text-gray-900 text-xl font-semibold mb-2">No data found</div>
-                            <div className="text-gray-500">Try adjusting your search criteria or date range</div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                )}
+              </tbody>
+            </table>
           </div>
         )}
       </main>

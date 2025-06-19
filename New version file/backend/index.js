@@ -1,6 +1,5 @@
 const express = require('express');
 const mysql = require('mysql');
-// const mysql = require('mysql2');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 
@@ -10,8 +9,8 @@ app.use(express.json());
 
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'root',   // SQL username
-  password: 'Rony@0911',    // SQL password
+  user: 'root',
+  password: 'Rony@0911',
   database: 'iocl_chemical_form'
 });
 
@@ -23,64 +22,53 @@ db.connect((err) => {
   console.log('Connected to MySQL');
 });
 
-// Add the new route here
+// Get user first name
 app.get('/user/:id', (req, res) => {
   const userId = req.params.id;
   const sql = 'SELECT first_name FROM users WHERE id = ?';
   db.query(sql, [userId], (err, results) => {
-    if (err) {
-      console.error('DB error:', err);
-      return res.status(500).json({ error: 'Database error', details: err.message });
-    }
-    if (results.length === 0) {
-      return res.status(404).json({ error: 'User not found' });
-    }
+    if (err) return res.status(500).json({ error: err.message });
+    if (results.length === 0) return res.status(404).json({ error: 'User not found' });
     res.json({ firstName: results[0].first_name });
   });
 });
 
-// Route: Signup - Register new user
+// Signup route
 app.post('/signup', (req, res) => {
-  console.log('Signup request received:', req.body);
-
   const { firstName, lastName, email, phone, password } = req.body;
-
   if (!firstName || !lastName || !email || !phone || !password) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
   const hashedPassword = bcrypt.hashSync(password, 10);
-
-  const sql = `
-    INSERT INTO users (first_name, last_name, email, phone, password, plain_password)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `;
+  const sql = `INSERT INTO users (first_name, last_name, email, phone, password, plain_password)
+               VALUES (?, ?, ?, ?, ?, ?)`;
 
   db.query(sql, [firstName, lastName, email, phone, hashedPassword, password], (err, result) => {
     if (err) {
-      console.error('MySQL error during signup:', err);
       if (err.code === 'ER_DUP_ENTRY') {
         return res.status(400).json({ error: 'Email already registered' });
       }
-      return res.status(500).json({ error: 'Database error', details: err.message });
+      return res.status(500).json({ error: err.message });
     }
-
     res.status(201).json({
       message: 'Signup successful',
       userId: result.insertId,
-      firstName: firstName,
-      email: email
+      firstName,
+      email
     });
   });
 });
 
-// Route: Login - Validate user credentials
-// Route: Login - Validate user credentials
+// Login route
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  // Log the login request
-  console.log(`Login hit: { email: '${email}', password: '${password}' }`);
+  const green = '\x1b[32m';
+  const reset = '\x1b[0m';
+
+  // Log login request
+  console.log(`Login hit: { email: ${green}'${email}'${reset}, password: ${green}'${password}'${reset} }`);
 
   const sql = 'SELECT * FROM users WHERE email = ?';
   db.query(sql, [email], (err, results) => {
@@ -89,23 +77,24 @@ app.post('/login', (req, res) => {
       return res.status(500).json({ error: 'Database error', details: err.message });
     }
 
-    console.log(`DB query results:`);
+    console.log('DB query results:');
+
     if (results.length > 0) {
-      results.forEach((result) => {
-        // Format and colorize the output after ":" in green
-        console.log(`  RowDataPacket {`);
-        console.log(`    id: \x1b[32m${result.id}\x1b[0m,`);
-        console.log(`    first_name: \x1b[32m'${result.first_name}'\x1b[0m,`);
-        console.log(`    last_name: \x1b[32m'${result.last_name}'\x1b[0m,`);
-        console.log(`    email: \x1b[32m'${result.email}'\x1b[0m,`);
-        console.log(`    phone: \x1b[32m'${result.phone}'\x1b[0m,`);
-        console.log(`    password: \x1b[32m'${result.password}'\x1b[0m,`);
-        console.log(`    created_at: \x1b[32m${result.created_at}\x1b[0m,`);
-        console.log(`    plain_password: \x1b[32m'${password}'\x1b[0m`);
-        console.log(`  }`);
-      });
+      const user = results[0];
+      const createdAt = new Date(user.created_at).toString();
+
+      console.log(`  RowDataPacket {`);
+      console.log(`    id: ${green}${user.id}${reset},`);
+      console.log(`    first_name: ${green}'${user.first_name}'${reset},`);
+      console.log(`    last_name: ${green}'${user.last_name}'${reset},`);
+      console.log(`    email: ${green}'${user.email}'${reset},`);
+      console.log(`    phone: ${green}'${user.phone}'${reset},`);
+      console.log(`    password: ${green}'${user.password}'${reset},`);
+      console.log(`    created_at: ${green}'${createdAt}'${reset},`);
+      console.log(`    plain_password: ${green}'${password}'${reset}`);
+      console.log(`  }`);
     } else {
-      console.log("  No user found");
+      console.log('  No user found');
     }
 
     if (results.length === 0) {
@@ -122,31 +111,59 @@ app.post('/login', (req, res) => {
     res.status(200).json({ message: 'Login successful', userId: user.id });
   });
 });
+// Submit new chemical form (with user_id)
+app.post('/chemical_forms', (req, res) => {
+  const data = req.body;
+  if (!data.user_id) {
+    return res.status(400).json({ error: 'user_id is required' });
+  }
 
-// Example endpoint to get all chemical_form entries
+  const green = '\x1b[32m';
+  const reset = '\x1b[0m';
+
+  console.log('Received chemical form submission: {');
+  const keys = Object.keys(data);
+  keys.forEach((key, index) => {
+    const value = data[key];
+    const comma = index < keys.length - 1 ? ',' : '';
+    console.log(`${key}: ${green}'${value}'${reset}${comma}`);
+  });
+  console.log('}');
+
+  db.query('INSERT INTO chemical_form SET ?', data, (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    console.log(`Chemical form inserted with ID: ${green}${results.insertId}${reset}`);
+    res.json({ id: results.insertId, ...data });
+  });
+});
+
+
+// Fetch all chemical form entries (all users — mostly for admin/debug)
 app.get('/chemical_forms', (req, res) => {
-  console.log("Form Submitted :", req.body);
   db.query('SELECT * FROM chemical_form', (err, results) => {
-    if (err) return res.status(500).json({ error: err });
+    if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
-// Example endpoint to insert a new chemical_form entry
-app.post('/chemical_forms', (req, res) => {
-  const data = req.body;
+// Get chemical form entries by userId
+app.get('/chemical_forms/:userId', (req, res) => {
+  const userId = req.params.userId;
+  db.query('SELECT * FROM chemical_form WHERE user_id = ?', [userId], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
 
-  console.log('Received chemical form submission:', data);
-
-  db.query('INSERT INTO chemical_form SET ?', data, (err, results) => {
-    if (err) {
-      console.error('MySQL error while inserting chemical form:', err);
-      return res.status(500).json({ error: err });
-    }
-
-    console.log('Chemical form inserted at row no. :', results.insertId);
-
-    res.json({ id: results.insertId, ...data });
+// Get unique units for a user
+app.get('/units/:userId', (req, res) => {
+  const userId = req.params.userId;
+  const sql = 'SELECT DISTINCT unit FROM chemical_form WHERE user_id = ?';
+  db.query(sql, [userId], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    const units = results.map(r => r.unit);
+    res.json({ units });
   });
 });
 
