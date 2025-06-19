@@ -5,12 +5,14 @@
 ![MySQL](https://img.shields.io/badge/Database-MySQL-blue?logo=mysql)
 ![XAMPP](https://img.shields.io/badge/Server-XAMPP-orange?logo=apache)
 
+
 A full-stack portal designed for Indian Oil employees to **log**, **track**, and **review** their daily chemical consumption securely and efficiently.
 
 ---
 
 ## 📂 Project Structure
 
+```bash
 .
 ├── backend/
 │ ├── index.js
@@ -51,7 +53,7 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 │ │ │ ├── main.tsx
 │ │ │ └── vite-env.d.ts
 
-
+```
 ---
 
 ## 🚀 Features
@@ -120,6 +122,7 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 2. Import the 3 files from `/Database`:  
    `Database.sql`, `users.sql`, `Form.sql` using phpMyAdmin or CLI.
 
+
 ### ⚙ Backend Setup
 
 ```bash
@@ -127,13 +130,13 @@ cd backend
 npm install
 # Create a .env file with your MySQL DB credentials
 node index.js
-
-💻 Frontend Setup
+```
+### 💻 Frontend Setup
 ```bash
-
 cd frontend
 npm install
 npm run dev
+```
 
 🤝 Contributing
 Contributions are welcome! Give Star ⭐ and Feel free to fork and raise a pull request.
