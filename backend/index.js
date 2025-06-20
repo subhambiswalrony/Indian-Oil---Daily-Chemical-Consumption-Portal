@@ -14,7 +14,7 @@ app.use(express.json());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: ' ',   // Set your MySQL root password here
+  password: 'Rony0911',   // Set your MySQL root password here
   database: 'iocl_chemical_form'
 });
 
