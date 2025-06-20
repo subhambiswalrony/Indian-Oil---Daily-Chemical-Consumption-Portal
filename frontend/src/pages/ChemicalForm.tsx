@@ -166,7 +166,7 @@ const ChemicalForm: React.FC = () => {
     const userId = localStorage.getItem('userId'); // ✅ fetch from localStorage
 
     try {
-      const response = await fetch('http://localhost:5000/chemical_forms', {
+      const response = await fetch('https://indian-oil-daily-chemical-consumption.onrender.com/chemical_forms', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, user_id: userId }), // ✅ attach to payload
