@@ -45,11 +45,13 @@ function ReportPage() {
 
   const userId = localStorage.getItem('userId');
 
+  const backend_url = 'http://localhost:5000'; 
+
   useEffect(() => {
     if (!userId) return;
 
     // Fetch all forms submitted by the user
-    fetch(`https://indian-oil-daily-chemical-consumption.onrender.com/chemical_forms/${userId}`)
+    fetch(`${backend_url}/chemical_forms/${userId}`)
       .then(res => res.json())
       .then(data => {
         setAllData(data);
@@ -59,7 +61,7 @@ function ReportPage() {
       .catch(err => console.error('Error fetching forms:', err));
 
     // Fetch distinct unit list for the user
-    fetch(`https://indian-oil-daily-chemical-consumption.onrender.com/units/${userId}`)
+    fetch(`${backend_url}/units/${userId}`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data.units)) {

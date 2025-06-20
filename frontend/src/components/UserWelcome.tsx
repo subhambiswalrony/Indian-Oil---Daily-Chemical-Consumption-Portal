@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+const backend_url = 'http://localhost:5000';
+
 const UserWelcome: React.FC = () => {
   const [firstName, setFirstName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -15,7 +17,7 @@ const UserWelcome: React.FC = () => {
       return;
     }
 
-    fetch(`https://indian-oil-daily-chemical-consumption.onrender.com/user/${userId}`)
+    fetch(`${backend_url}/user/${userId}`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch user');
         return res.json();

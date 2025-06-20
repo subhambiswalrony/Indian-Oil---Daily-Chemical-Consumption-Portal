@@ -46,6 +46,8 @@ function LoginPage() {
     return !newErrors.email && !newErrors.password;
   };
 
+  const backend_url = 'http://localhost:5000'; 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -54,7 +56,7 @@ function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://indian-oil-daily-chemical-consumption.onrender.com/login', {
+      const response = await fetch( `${backend_url}/login` , {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
