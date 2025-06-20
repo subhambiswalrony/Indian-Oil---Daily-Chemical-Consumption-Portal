@@ -4,7 +4,6 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
-
 const app = express();
 app.use(cors({
   origin: '*',
@@ -172,6 +171,10 @@ app.get('/units/:userId', (req, res) => {
     const units = results.map(r => r.unit);
     res.json({ units });
   });
+});
+
+app.get('/', (req, res) => {
+  res.send('🎉 Backend is running!');
 });
 
 app.listen(5000, () => {
