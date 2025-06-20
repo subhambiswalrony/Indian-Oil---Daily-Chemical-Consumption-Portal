@@ -49,7 +49,7 @@ function ReportPage() {
     if (!userId) return;
 
     // Fetch all forms submitted by the user
-    fetch(`http://localhost:5000/chemical_forms/${userId}`)
+    fetch(`https://indian-oil-daily-chemical-consumption.onrender.com/chemical_forms/${userId}`)
       .then(res => res.json())
       .then(data => {
         setAllData(data);
@@ -59,7 +59,7 @@ function ReportPage() {
       .catch(err => console.error('Error fetching forms:', err));
 
     // Fetch distinct unit list for the user
-    fetch(`http://localhost:5000/units/${userId}`)
+    fetch(`https://indian-oil-daily-chemical-consumption.onrender.com/units/${userId}`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data.units)) {
