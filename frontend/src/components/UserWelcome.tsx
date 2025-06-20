@@ -15,7 +15,7 @@ const UserWelcome: React.FC = () => {
       return;
     }
 
-    fetch(`http://localhost:5000/user/${userId}`)
+    fetch(`https://indian-oil-daily-chemical-consumption.onrender.com/user/${userId}`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch user');
         return res.json();
