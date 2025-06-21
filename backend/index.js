@@ -31,15 +31,29 @@ db.connect((err) => {
 });
 
 // Get user first name
-app.get('/user/:id', (req, res) => {
-  const userId = req.params.id;
-  const sql = 'SELECT first_name FROM users WHERE id = ?';
-  db.query(sql, [userId], (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
-    if (results.length === 0) return res.status(404).json({ error: 'User not found' });
-    res.json({ firstName: results[0].first_name });
-  });
+// const supabase = require('./supabase'); // adjust path if needed
+
+app.get('/user/:id', async (req, res) => {
+  const userId = parseInt(req.params.id, 10);
+
+  const { data, error } = await supabase
+    .from('users')
+    .select('first_name')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching user:', error.message);
+    return res.status(500).json({ error: error.message });
+  }
+
+  if (!data) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  res.json({ firstName: data.first_name });
 });
+
 
 // Signup route
 const supabase = require('./supabase');
@@ -147,15 +161,21 @@ app.get('/chemical_forms/:userId', async (req, res) => {
 
 
 // Get unique units for a user
-app.get('/units/:userId', (req, res) => {
-  const userId = req.params.userId;
-  const sql = 'SELECT DISTINCT unit FROM chemical_form WHERE user_id = ?';
-  db.query(sql, [userId], (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
-    const units = results.map(r => r.unit);
-    res.json({ units });
-  });
+app.get('/units/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const supabase = require('./supabase');
+
+  const { data, error } = await supabase
+    .from('chemical_form')
+    .select('unit')
+    .eq('user_id', userId);
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  const uniqueUnits = [...new Set(data.map(row => row.unit))];
+  res.json({ units: [ ...uniqueUnits] });
 });
+
 
 app.get('/', (req, res) => {
   res.send('🎉 Backend is running!');
