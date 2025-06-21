@@ -42,108 +42,84 @@ app.get('/user/:id', (req, res) => {
 });
 
 // Signup route
-app.post('/signup', (req, res) => {
+const supabase = require('./supabase');
+
+app.post('/signup', async (req, res) => {
   const { firstName, lastName, email, phone, password } = req.body;
   if (!firstName || !lastName || !email || !phone || !password) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
   const hashedPassword = bcrypt.hashSync(password, 10);
-  const sql = `INSERT INTO users (first_name, last_name, email, phone, password, plain_password)
-               VALUES (?, ?, ?, ?, ?, ?)`;
 
-  db.query(sql, [firstName, lastName, email, phone, hashedPassword, password], (err, result) => {
-    if (err) {
-      if (err.code === 'ER_DUP_ENTRY') {
-        return res.status(400).json({ error: 'Email already registered' });
-      }
-      return res.status(500).json({ error: err.message });
+  const { data, error } = await supabase
+    .from('users')
+    .insert([
+      {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone,
+        password: hashedPassword,
+        plain_password: password,
+      },
+    ])
+    .select('id, first_name, email')
+    .single();
+
+  if (error) {
+    if (error.code === '23505') {
+      return res.status(400).json({ error: 'Email already registered' });
     }
-    res.status(201).json({
-      message: 'Signup successful',
-      userId: result.insertId,
-      firstName,
-      email
-    });
+    return res.status(500).json({ error: error.message });
+  }
+
+  res.status(201).json({
+    message: 'Signup successful',
+    userId: data.id,
+    firstName: data.first_name,
+    email: data.email,
   });
 });
 
 // Login route
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const { email, password } = req.body;
+  const supabase = require('./supabase');
 
-  const green = '\x1b[32m';
-  const reset = '\x1b[0m';
+  const { data: users, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', email)
+    .limit(1);
 
-  // Log login request
-  console.log(`Login hit: { email: ${green}'${email}'${reset}, password: ${green}'${password}'${reset} }`);
-
-  const sql = 'SELECT * FROM users WHERE email = ?';
-  db.query(sql, [email], (err, results) => {
-    if (err) {
-      console.error('DB error:', err);
-      return res.status(500).json({ error: 'Database error', details: err.message });
-    }
-
-    console.log('DB query results:');
-
-    if (results.length > 0) {
-      const user = results[0];
-      const createdAt = new Date(user.created_at).toString();
-
-      console.log(`  RowDataPacket {`);
-      console.log(`    id: ${green}${user.id}${reset},`);
-      console.log(`    first_name: ${green}'${user.first_name}'${reset},`);
-      console.log(`    last_name: ${green}'${user.last_name}'${reset},`);
-      console.log(`    email: ${green}'${user.email}'${reset},`);
-      console.log(`    phone: ${green}'${user.phone}'${reset},`);
-      console.log(`    password: ${green}'${user.password}'${reset},`);
-      console.log(`    created_at: ${green}'${createdAt}'${reset},`);
-      console.log(`    plain_password: ${green}'${password}'${reset}`);
-      console.log(`  }`);
-    } else {
-      console.log('  No user found');
-    }
-
-    if (results.length === 0) {
-      return res.status(401).json({ error: 'User not found', status: 'unregistered' });
-    }
-
-    const user = results[0];
-    const isMatch = bcrypt.compareSync(password, user.password);
-
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Incorrect password' });
-    }
-
-    res.status(200).json({ message: 'Login successful', userId: user.id });
-  });
-});
-// Submit new chemical form (with user_id)
-app.post('/chemical_forms', (req, res) => {
-  const data = req.body;
-  if (!data.user_id) {
-    return res.status(400).json({ error: 'user_id is required' });
+  if (error || !users || users.length === 0) {
+    return res.status(401).json({ error: 'User not found', status: 'unregistered' });
   }
 
-  const green = '\x1b[32m';
-  const reset = '\x1b[0m';
+  const user = users[0];
+  const isMatch = bcrypt.compareSync(password, user.password);
+  if (!isMatch) {
+    return res.status(401).json({ error: 'Incorrect password' });
+  }
 
-  console.log('Received chemical form submission: {');
-  const keys = Object.keys(data);
-  keys.forEach((key, index) => {
-    const value = data[key];
-    const comma = index < keys.length - 1 ? ',' : '';
-    console.log(`${key}: ${green}'${value}'${reset}${comma}`);
-  });
-  console.log('}');
+  res.status(200).json({ message: 'Login successful', userId: user.id });
+});
 
-  db.query('INSERT INTO chemical_form SET ?', data, (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
+// Submit new chemical form (with user_id)
+app.post('/chemical_forms', async (req, res) => {
+  const data = req.body;
+  if (!data.user_id) return res.status(400).json({ error: 'user_id is required' });
 
-    console.log(`Chemical form inserted with ID: ${green}${results.insertId}${reset}`);
-    res.json({ id: results.insertId, ...data });
-  });
+  const { data: insertData, error } = await supabase
+    .from('chemical_form')
+    .insert([data])
+    .select('*')
+    .single();
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  res.json(insertData);
 });
 
 
@@ -156,13 +132,19 @@ app.get('/chemical_forms', (req, res) => {
 });
 
 // Get chemical form entries by userId
-app.get('/chemical_forms/:userId', (req, res) => {
-  const userId = req.params.userId;
-  db.query('SELECT * FROM chemical_form WHERE user_id = ?', [userId], (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(results);
-  });
+app.get('/chemical_forms/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  const { data, error } = await supabase
+    .from('chemical_form')
+    .select('*')
+    .eq('user_id', userId);
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  res.json(data);
 });
+
 
 // Get unique units for a user
 app.get('/units/:userId', (req, res) => {
