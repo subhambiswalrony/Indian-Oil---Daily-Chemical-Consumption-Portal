@@ -45,7 +45,7 @@ function ReportPage() {
 
   const userId = localStorage.getItem('userId');
 
-  const backend_url = 'http://localhost:5000'; 
+  const backend_url = import.meta.env.VITE_BACKEND_URL; 
 
   useEffect(() => {
     if (!userId) return;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const backend_url = 'http://localhost:5000';
+const backend_url = import.meta.env.VITE_BACKEND_URL;
 
 const UserWelcome: React.FC = () => {
   const [firstName, setFirstName] = useState<string | null>(null);

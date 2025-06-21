@@ -160,7 +160,7 @@ const ChemicalForm: React.FC = () => {
     }));
   };
 
-  const backend_url = 'http://localhost:5000/';
+  const backend_url = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
