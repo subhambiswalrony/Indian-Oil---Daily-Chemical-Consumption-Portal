@@ -139,7 +139,7 @@ node index.js
 ```bash
 cd frontend
 npm install
-# Create a .env file with your BACKENDEND_URL and Supabase DB credentials
+# Create a .env file with your BACKENDEND_URL credentials
 npm run dev
 ```
 
