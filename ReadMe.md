@@ -81,16 +81,17 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 
 ### `users` Table
 
-| Field           | Type         | Description                          |
-| --------------- | ------------ | ------------------------------------ |
-| id              | INT (PK)     | Unique user ID (auto-incremented)    |
-| first_name      | VARCHAR(100) | User's first name                    |
-| last_name       | VARCHAR(100) | User's last name                     |
-| email           | VARCHAR(100) | User's email address                 |
-| phone           | VARCHAR(20)  | User's phone number                  |
-| password        | VARCHAR(255) | Hashed user password                 |
-| created_at      | TIMESTAMP    | Account creation timestamp           |
-| plain_password  | VARCHAR(100) | User's plain password (for dev only) |
+| Column Name      | Data Type      | Description                                                                     |
+| ---------------- | -------------- | ------------------------------------------------------------------------------- |
+| `id`             | `SERIAL`       | Auto-incrementing primary key for each user.                                    |
+| `first_name`     | `VARCHAR(100)` | User's first name.                                                              |
+| `last_name`      | `VARCHAR(100)` | User's last name.                                                               |
+| `email`          | `VARCHAR(100)` | User's email address (must be unique).                                          |
+| `phone`          | `VARCHAR(20)`  | User's phone number.                                                            |
+| `password`       | `VARCHAR(255)` | Encrypted (hashed) user password.                                               |
+| `created_at`     | `TIMESTAMP`    | Timestamp of when the user account was created. Defaults to current time.       |
+| `plain_password` | `VARCHAR(100)` | ⚠️ Plain text password (for dev/demo only) — **not recommended in production.** |
+
 
 
 ---
