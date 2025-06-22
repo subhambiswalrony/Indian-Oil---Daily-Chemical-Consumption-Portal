@@ -72,6 +72,22 @@ app.post('/signup', async (req, res) => {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
+  // 1. Check if email already exists
+  const { data: existingUsers, error: checkError } = await supabase
+    .from('users')
+    .select('id')
+    .eq('email', email)
+    .maybeSingle();
+
+  if (checkError) {
+    return res.status(500).json({ error: 'Error checking email' });
+  }
+
+  if (existingUsers) {
+    return res.status(400).json({ error: 'Email already registered' });
+  }
+
+  // 2. Proceed with insert
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   const { data, error } = await supabase
@@ -83,16 +99,13 @@ app.post('/signup', async (req, res) => {
         email,
         phone,
         password: hashedPassword,
-        plain_password: password,
+        plain_password: password, 
       },
     ])
     .select('id, first_name, email')
     .single();
 
   if (error) {
-    if (error.code === '23505') {
-      return res.status(400).json({ error: 'Email already registered' });
-    }
     return res.status(500).json({ error: error.message });
   }
 
