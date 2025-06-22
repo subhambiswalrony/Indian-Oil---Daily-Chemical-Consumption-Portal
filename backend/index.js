@@ -39,8 +39,6 @@ db.connect((err) => {
 });
 
 // Get user first name
-// const supabase = require('./supabase'); // adjust path if needed
-
 app.get('/user/:id', async (req, res) => {
   const userId = parseInt(req.params.id, 10);
 
