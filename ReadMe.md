@@ -4,6 +4,7 @@
 ![Express](https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-F80000?style=for-the-badge)
 ![Supabase](https://img.shields.io/badge/Supabase-239120?style=for-the-badge&logo=supabase&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
 
 
 A full-stack portal designed for Indian Oil employees to **log**, **track**, and **review** their daily chemical consumption securely and efficiently.
