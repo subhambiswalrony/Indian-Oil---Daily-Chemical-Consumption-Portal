@@ -98,22 +98,22 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 
 ### `chemical_form` Table
 
-| Field        | Type           | Description                      |
-|--------------|----------------|----------------------------------|
-| id           | INT (PK)       | Entry ID                         |
-| user_id      | INT (FK)       | References `users.id`            |
-| date         | DATE           | Date of entry                    |
-| unit         | VARCHAR(100)   | Unit or department               |
-| chemical     | VARCHAR(255)   | Name of chemical                 |
-| uom          | VARCHAR(50)    | Unit of Measurement              |
-| sapcode      | VARCHAR(100)   | SAP material code                |
-| opening      | DECIMAL(10,2)  | Opening stock                    |
-| receive      | DECIMAL(10,2)  | Quantity received                |
-| consumption  | DECIMAL(10,2)  | Quantity consumed                |
-| closing      | DECIMAL(10,2)  | Closing stock                    |
-| sapbalance   | DECIMAL(10,2)  | SAP recorded balance             |
-| remarks      | TEXT           | Optional remarks                 |
-| created_at   | TIMESTAMP      | Timestamp (auto)                 |
+| Field          |   Type           | Description                      |
+|----------------|------------------|----------------------------------|
+| `id`           | `INT (PK)`       | Entry ID                         |
+| `user_id`      | `INT (FK)`       | References `users.id`            |
+| `date`         | `DATE`           | Date of entry                    |
+| `unit`         | `VARCHAR(100)`   | Unit or department               |
+| `chemical`     | `VARCHAR(255)`   | Name of chemical                 |
+| `uom`          | `VARCHAR(50)`    | Unit of Measurement              |
+| `sapcode`      | `VARCHAR(100)`   | SAP material code                |
+| `opening`      | `DECIMAL(10,2)`  | Opening stock                    |
+| `receive`      | `DECIMAL(10,2)`  | Quantity received                |
+| `consumption`  | `DECIMAL(10,2)`  | Quantity consumed                |
+| `closing`      | `DECIMAL(10,2)`  | Closing stock                    |
+| `sapbalance`   | `DECIMAL(10,2)`  | SAP recorded balance             |
+| `remarks`      | `TEXT`           | Optional remarks                 |
+| `created_at`   | `TIMESTAMP`      | Timestamp (auto)                 |
 
 > 🔗 `user_id` is a foreign key with `ON DELETE CASCADE` from `users.id`
 
