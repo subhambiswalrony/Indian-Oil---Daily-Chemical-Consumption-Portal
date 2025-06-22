@@ -20,7 +20,6 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 │ └── package-lock.json
 │
 ├── Database/
-│ ├── Database.sql
 │ ├── Form.sql
 │ └── users.sql
 │
