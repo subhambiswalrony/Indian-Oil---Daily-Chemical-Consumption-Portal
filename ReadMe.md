@@ -1,9 +1,9 @@
 # 🧪 Indian Oil - Daily Chemical Consumption Portal
 
-![React](https://img.shields.io/badge/Frontend-React-blue?logo=react)
-![Express](https://img.shields.io/badge/Backend-Express.js-lightgrey?logo=express)
-![MySQL](https://img.shields.io/badge/Database-MySQL-blue?logo=mysql)
-![XAMPP](https://img.shields.io/badge/Server-XAMPP-orange?logo=apache)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Express](https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-F80000?style=for-the-badge)
+![Supabase](https://img.shields.io/badge/Supabase-239120?style=for-the-badge&logo=supabase&logoColor=white)
 
 
 A full-stack portal designed for Indian Oil employees to **log**, **track**, and **review** their daily chemical consumption securely and efficiently.
@@ -73,7 +73,7 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 |-----------|--------------------------------------------|
 | Frontend  | React, Tailwind CSS, Framer Motion, Vite   |
 | Backend   | Node.js, Express.js                        |
-| Database  | MySQL (via XAMPP)                          |
+| Database  | Supabase, PostgreSQL                       |
 | Tools     | TypeScript, Lucide Icons, ESLint           |
 
 ---
@@ -82,13 +82,17 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 
 ### `users` Table
 
-| Field       | Type         | Description                  |
-|-------------|--------------|------------------------------|
-| id          | INT (PK)     | Unique user ID               |
-| email       | VARCHAR(255) | Unique user email            |
-| password    | VARCHAR(255) | Hashed password              |
-| name        | VARCHAR(255) | Full name                    |
-| created_at  | TIMESTAMP    | Timestamp (auto)             |
+| Field           | Type         | Description                          |
+| --------------- | ------------ | ------------------------------------ |
+| id              | INT (PK)     | Unique user ID (auto-incremented)    |
+| first_name      | VARCHAR(100) | User's first name                    |
+| last_name       | VARCHAR(100) | User's last name                     |
+| email           | VARCHAR(100) | User's email address                 |
+| phone           | VARCHAR(20)  | User's phone number                  |
+| password        | VARCHAR(255) | Hashed user password                 |
+| created_at      | TIMESTAMP    | Account creation timestamp           |
+| plain_password  | VARCHAR(100) | User's plain password (for dev only) |
+
 
 ---
 
@@ -117,10 +121,10 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 
 ## 🧪 Setup Instructions
 
-### 📦 MySQL Setup (via XAMPP)
-1. Start Apache and MySQL via XAMPP.
-2. Import the 3 files from `/Database`:  
-   `Database.sql`, `users.sql`, `Form.sql` using phpMyAdmin or CLI.
+### 📦 Supabase Setup 
+1. Goto to Official Website of Supabase and create your project.
+2. In SQL editor, copy code from `Database` folder:  
+   and paste it to create `users`, `chemical_form.sql`by using PostgreSQL.
 
 
 ### ⚙ Backend Setup
@@ -128,13 +132,14 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 ```bash
 cd backend
 npm install
-# Create a .env file with your MySQL DB credentials
+# Create a .env file with your FRONTEND_URL and Supabase DB credentials
 node index.js
 ```
 ### 💻 Frontend Setup
 ```bash
 cd frontend
 npm install
+# Create a .env file with your BACKENDEND_URL and Supabase DB credentials
 npm run dev
 ```
 
