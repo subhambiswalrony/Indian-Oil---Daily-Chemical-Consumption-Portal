@@ -165,10 +165,16 @@ const ChemicalForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const sapcodeRegex = /^SAP\d+$/;
+    if (!sapcodeRegex.test(formData.sapcode)) {
+      alert("SAP Code must start with 'SAP' followed by numbers (e.g., SAP1001).");
+      return;
+    }
+
     const userId = localStorage.getItem('userId'); // ✅ fetch from localStorage
 
     try {
-      const response = await fetch(  `${backend_url}/chemical_forms`, {
+      const response = await fetch(`${backend_url}/chemical_forms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, user_id: userId }), // ✅ attach to payload
@@ -298,10 +304,7 @@ const ChemicalForm: React.FC = () => {
               />
             </motion.div>
 
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="space-y-2"
-            >
+            <motion.div whileHover={{ scale: 1.02 }} className="space-y-2">
               <label className="block text-gray-700 font-medium" htmlFor="sapcode">
                 SAP Material Code
               </label>
@@ -313,6 +316,8 @@ const ChemicalForm: React.FC = () => {
                 onChange={handleChange}
                 className="form-input"
                 required
+                pattern="^SAP\d+$"
+                title="Must start with 'SAP' followed by numbers (e.g., SAP1001)"
               />
             </motion.div>
           </div>
