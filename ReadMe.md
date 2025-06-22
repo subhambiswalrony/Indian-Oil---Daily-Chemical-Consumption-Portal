@@ -124,7 +124,7 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 ### 📦 Supabase Setup 
 1. Goto to Official Website of Supabase and create your project.
 2. In SQL editor, copy code from `Database` folder:  
-   and paste it to create `users`, `chemical_form.sql`by using PostgreSQL.
+   and paste it to create `users`, `chemical_form` Tables by using PostgreSQL.
 
 
 ### ⚙ Backend Setup
