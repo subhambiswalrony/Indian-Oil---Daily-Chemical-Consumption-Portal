@@ -1,5 +1,5 @@
-CREATE TABLE iocl_chemical_form.chemical_form (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE chemical_form (
+  id SERIAL PRIMARY KEY,
   user_id INT NOT NULL,
   date DATE,
   unit VARCHAR(100),
@@ -13,9 +13,7 @@ CREATE TABLE iocl_chemical_form.chemical_form (
   sapbalance DECIMAL(10,2),
   remarks TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  
-  -- Foreign Key Constraint
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
 
-select * from iocl_chemical_form.chemical_form;
+  -- Foreign Key Constraint
+  FOREIGN KEY (user_id) REFERENCES iocl_chemical_form.users(id) ON DELETE CASCADE
+);
