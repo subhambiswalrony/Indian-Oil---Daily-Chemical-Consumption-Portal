@@ -153,7 +153,7 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 ```bash
 cd backend
 npm install
-# Create a .env file with your FRONTEND_URL, Supabase DB and MAIL User abd Mail Pass credentials
+# Create a .env file with your FRONTEND_URL, Supabase DB & MAIL User and Mail Pass credentials
 node index.js
 ```
 ### 💻 Frontend Setup
