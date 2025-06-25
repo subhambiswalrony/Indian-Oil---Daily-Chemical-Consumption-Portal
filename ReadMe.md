@@ -18,6 +18,8 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 .
 ├── backend/
 │ ├── index.js
+│ ├── mailer.js
+│ ├── supabase.js
 │ ├── package.json
 │ └── package-lock.json
 │
