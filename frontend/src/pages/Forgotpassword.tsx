@@ -347,7 +347,7 @@ function ForgotPassword() {
                                         </div>
                                         <h2 className="text-xl font-semibold text-gray-800 mb-2">Enter OTP</h2>
                                         <p className="text-gray-600 text-sm">Enter the 6-digit code sent to your mobile</p>
-                                        <p className="text-orange-600 text-sm font-medium mt-1">+91 ****-***-789</p>
+                                      {/*  <p className="text-orange-600 text-sm font-medium mt-1">+91 ****-***-789</p>  */}
                                     </div>
 
                                     <form onSubmit={handleOtpSubmit} className="space-y-6">
