@@ -25,7 +25,8 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 │
 ├── Database/
 │ ├── Form.sql
-│ └── users.sql
+│ ├── users.sql
+│ └── otp_tokens.sql
 │
 ├── frontend/
 │ ├── index.html
