@@ -48,6 +48,7 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 │ │ ├── pages/
 │ │ │ ├── ChemicalForm.tsx
 │ │ │ ├── loginPage.tsx
+│ │ │ ├── ForgotPassword.tsx
 │ │ │ ├── ReportPage.tsx
 │ │ │ └── SignupPage.tsx
 │ │ └── utils/
