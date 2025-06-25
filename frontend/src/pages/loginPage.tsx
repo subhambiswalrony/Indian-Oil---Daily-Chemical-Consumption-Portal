@@ -533,6 +533,7 @@ function LoginPage() {
                 </div>
                 <button
                   type="button"
+                  onClick={() => navigate('/forgot-password')}
                   className="text-sm text-orange-600 hover:text-orange-500 font-medium transition-colors"
                 >
                   Forgot password?

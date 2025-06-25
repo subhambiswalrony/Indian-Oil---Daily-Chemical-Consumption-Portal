@@ -7,6 +7,7 @@ import UserWelcome from './components/UserWelcome';
 
 import SignUpPage from './pages/SignupPage';
 import LoginPage from './pages/loginPage';
+import ForgotPassword from './pages/Forgotpassword';
 import ChemicalFormPage from './pages/ChemicalForm';
 import ReportPage from './pages/ReportPage';
 
@@ -43,6 +44,7 @@ function App() {
         {/* Public Route - Sign Up and Login should be default */}
         <Route path="/" element={<SignUpPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* Protected Routes */}
         <Route
