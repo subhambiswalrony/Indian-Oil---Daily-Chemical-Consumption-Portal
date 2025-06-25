@@ -59,12 +59,12 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 
 ## 🚀 Features
 
-- ✅ User authentication (login & signup)
+- ✅ User authentication (login, signup, forgot password via OTP)
+- ✅ OTP system with expiry logic
 - ✅ Secure password hashing (bcrypt)
-- ✅ Chemical entry form with multiple fields
-- ✅ Report page to view/filter entries
-- ✅ Relational database design
-- ✅ Modern UI with Tailwind and Framer Motion
+- ✅ Chemical form with validations
+- ✅ Report filter and entry listing
+- ✅ Fully responsive and animated UI
 
 ---
 
@@ -121,12 +121,27 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 
 ---
 
+
+### `otp_tokens` Table
+
+|  Column Name  |    Type       | Description                  |
+| ------------- | -----------   | ---------------------------- |
+| `id`          | `UUID (PK)`   | Unique token ID              |
+| `email`       | `TEXT (FK)`   | References `users.email`     |
+| `otp`         | `TEXT`        | One-Time Password            |
+| `token`       | `TEXT`        | Optional tracking token      |
+| `expires_at`  | `TIMESTAMPTZ` | OTP expiry timestamp         |
+| `created_at`  | `TIMESTAMPTZ` | Auto timestamp of generation |
+
+> 🔗 `users_email` is a foreign key 
+
+
 ## 🧪 Setup Instructions
 
 ### 📦 Supabase Setup 
 1. Goto to Official Website of Supabase and create your project.
 2. In SQL editor, copy code from `Database` folder:  
-   and paste it to create `users`, `chemical_form` Tables by using PostgreSQL.
+   and paste it to create `users`, `chemical_form` and `otp_tokens` Tables by using PostgreSQL.
 
 
 ### ⚙ Backend Setup
@@ -134,7 +149,7 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 ```bash
 cd backend
 npm install
-# Create a .env file with your FRONTEND_URL and Supabase DB credentials
+# Create a .env file with your FRONTEND_URL, Supabase DB and MAIL User abd Mail Pass credentials
 node index.js
 ```
 ### 💻 Frontend Setup
