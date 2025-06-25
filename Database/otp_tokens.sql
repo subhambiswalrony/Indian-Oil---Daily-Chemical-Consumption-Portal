@@ -1,10 +1,10 @@
--- Ensure the uuid-ossp extension is enabled (required for uuid_generate_v4)
+-- 1. Enable the UUID extension (if not already enabled)
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Create the otp_tokens table with necessary fields and types
+-- 2. Create the otp_tokens table with email referencing users(email)
 CREATE TABLE otp_tokens (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  email TEXT,
+  email TEXT REFERENCES users(email) ON DELETE CASCADE,
   otp TEXT,
   token TEXT,
   expires_at TIMESTAMPTZ,
