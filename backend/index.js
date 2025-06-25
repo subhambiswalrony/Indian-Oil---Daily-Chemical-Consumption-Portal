@@ -3,6 +3,9 @@ const mysql = require('mysql');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
+const supabase = require('./supabase');
+const { v4: uuidv4 } = require('uuid');
+const sendOtpEmail = require('./mailer');
 
 const port = process.env.PORT || 5000;
 
@@ -38,6 +41,145 @@ db.connect((err) => {
   console.log('Connected to MySQL');
 });
 
+app.post('/request-reset', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) return res.status(400).json({ message: 'Email is required' });
+
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('email')
+    .eq('email', email)
+    .single();
+
+  if (error || !user) {
+    return res.status(404).json({ message: 'Email not registered' });
+  }
+
+  // Generate and store OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
+  const { error: insertError } = await supabase
+    .from('otp_tokens')
+    .insert([{ email, otp, expires_at: expiresAt }]);
+
+  if (insertError) {
+    return res.status(500).json({ message: 'Failed to store OTP' });
+  }
+
+  try {
+    await sendOtpEmail(email, otp);
+    return res.status(200).json({ message: 'OTP sent to your email' });
+  } catch (err) {
+    console.error('Email sending error:', err.message);
+    return res.status(500).json({ message: 'Failed to send OTP email' });
+  }
+});
+
+app.post('/resend-otp', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: 'Email is required' });
+
+  // 1. Check if email exists
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('email')
+    .eq('email', email)
+    .single();
+
+  if (error || !user) {
+    return res.status(404).json({ message: 'Email not registered' });
+  }
+
+  // 2. Check for existing OTP
+  const { data: existingOtp, error: fetchError } = await supabase
+    .from('otp_tokens')
+    .select('*')
+    .eq('email', email)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const now = new Date();
+
+  // If OTP exists and is not expired and was sent less than 60 seconds ago
+  if (
+    existingOtp &&
+    new Date(existingOtp.expires_at) > now &&
+    new Date(now - new Date(existingOtp.created_at)) < 60000 // 60 seconds
+  ) {
+    return res.status(429).json({ message: 'Please wait before resending OTP' });
+  }
+
+  // 3. Generate new OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const token = uuidv4();
+  const expiresAt = new Date(now.getTime() + 5 * 60 * 1000); // 5 min expiry
+
+  const { error: insertError } = await supabase
+    .from('otp_tokens')
+    .insert([{ email, otp, token, expires_at: expiresAt }]);
+
+  if (insertError) {
+    return res.status(500).json({ message: 'Failed to generate new OTP' });
+  }
+
+  try {
+    await sendOtpEmail(email, otp); // same mailer
+    res.json({ message: 'New OTP sent to your email', token });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to send email' });
+  }
+});
+
+app.post('/verify-otp', async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp)
+    return res.status(400).json({ message: 'Email and OTP required' });
+
+  const { data: tokenData, error } = await supabase
+    .from('otp_tokens')
+    .select('*')
+    .eq('email', email)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error || !tokenData)
+    return res.status(404).json({ message: 'OTP not found' });
+
+  const now = Date.now();
+  const otpExpiry = new Date(tokenData.expires_at).getTime();
+
+  if (tokenData.otp !== otp)
+    return res.status(400).json({ message: 'Incorrect OTP' });
+
+  if (otpExpiry < now)
+    return res.status(400).json({ message: 'OTP expired' });
+
+  return res.status(200).json({ message: 'OTP verified' });
+});
+
+
+app.post('/reset-password', async (req, res) => {
+  const { email, newPassword } = req.body;
+
+  if (!email || !newPassword) return res.status(400).json({ message: 'Email and new password required' });
+
+  const hashedPassword = bcrypt.hashSync(newPassword, 10);
+
+  const { error } = await supabase
+    .from('users')
+    .update({ password: hashedPassword, plain_password: newPassword })
+    .eq('email', email);
+
+  if (error) return res.status(500).json({ message: 'Password update failed' });
+
+  res.json({ message: 'Password updated successfully' });
+});
+
 // Get user first name
 app.get('/user/:id', async (req, res) => {
   const userId = parseInt(req.params.id, 10);
@@ -62,8 +204,6 @@ app.get('/user/:id', async (req, res) => {
 
 
 // Signup route
-const supabase = require('./supabase');
-
 app.post('/signup', async (req, res) => {
   const { firstName, lastName, email, phone, password } = req.body;
   if (!firstName || !lastName || !email || !phone || !password) {
@@ -97,7 +237,7 @@ app.post('/signup', async (req, res) => {
         email,
         phone,
         password: hashedPassword,
-        plain_password: password, 
+        plain_password: password,
       },
     ])
     .select('id, first_name, email')
@@ -192,7 +332,7 @@ app.get('/units/:userId', async (req, res) => {
   if (error) return res.status(500).json({ error: error.message });
 
   const uniqueUnits = [...new Set(data.map(row => row.unit))];
-  res.json({ units: [ ...uniqueUnits] });
+  res.json({ units: [...uniqueUnits] });
 });
 
 
