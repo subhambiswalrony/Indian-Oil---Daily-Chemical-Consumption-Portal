@@ -186,6 +186,10 @@ app.get('/units/:userId', async (req, res) => {
   res.json({ units: uniqueUnits });
 });
 
+app.get('/', (req, res) => {
+  res.send('✅ Backend is running on Render');
+});
+
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
 });
