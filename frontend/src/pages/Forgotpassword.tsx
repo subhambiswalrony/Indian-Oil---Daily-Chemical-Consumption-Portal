@@ -280,7 +280,7 @@ function ForgotPassword() {
                                             <Mail className="w-8 h-8 text-orange-600" />
                                         </div>
                                         <h2 className="text-xl font-semibold text-gray-800 mb-2">Enter Your Email</h2>
-                                        <p className="text-gray-600 text-sm">We'll send an OTP to your registered mobile number</p>
+                                        <p className="text-gray-600 text-sm">We'll send an OTP to your registered Email</p>
                                     </div>
 
                                     <form onSubmit={handleEmailSubmit} className="space-y-6">
