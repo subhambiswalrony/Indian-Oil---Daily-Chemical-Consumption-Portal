@@ -1,5 +1,4 @@
 const express = require('express');
-const mysql = require('mysql');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
@@ -24,22 +23,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-});
-
-db.connect((err) => {
-  if (err) {
-    console.error('Database connection failed:', err.stack);
-    return;
-  }
-  console.log('Connected to MySQL');
-});
 
 app.post('/request-reset', async (req, res) => {
   const { email } = req.body;
@@ -297,11 +280,14 @@ app.post('/chemical_forms', async (req, res) => {
 
 
 // Fetch all chemical form entries (all users — mostly for admin/debug)
-app.get('/chemical_forms', (req, res) => {
-  db.query('SELECT * FROM chemical_form', (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(results);
-  });
+app.get('/chemical_forms', async (req, res) => {
+  const { data, error } = await supabase
+    .from('chemical_form')
+    .select('*');
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  res.json(data);
 });
 
 // Get chemical form entries by userId

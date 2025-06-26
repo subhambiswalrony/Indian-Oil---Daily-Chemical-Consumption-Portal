@@ -20,9 +20,9 @@
     "express": "^5.1.0",
     "express-mysql-session": "^3.0.3",
     "express-session": "^1.18.1",
-    "mysql": "^2.18.1",
     "mysql2": "^3.14.1",
     "nodemailer": "^7.0.3",
+    "pg": "^8.16.2",
     "uuid": "^11.1.0"
   }
 }
