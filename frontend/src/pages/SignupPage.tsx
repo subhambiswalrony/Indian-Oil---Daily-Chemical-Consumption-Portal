@@ -779,7 +779,7 @@ function App() {
           className="relative z-10 py-6 text-center"
         >
           <p className="text-sm text-gray-600">
-            © 2025 Indian Oil Corporation Limited. All rights reserved.
+            © 2025 Indian Oil Corporation Limited. All rights reserved. Made by Subham Biswal ❤️.
           </p>
         </motion.footer>
       </div>

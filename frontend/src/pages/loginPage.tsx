@@ -579,7 +579,7 @@ function LoginPage() {
         {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-500">
-            © 2025 Indian Oil Corporation Limited. All rights reserved.
+            © 2025 Indian Oil Corporation Limited. All rights reserved. Made by Subham Biswal ❤️.
           </p>
           <div className="flex justify-center space-x-4 mt-2">
             <button className="text-xs text-gray-500 hover:text-orange-500 transition-colors">
