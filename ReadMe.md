@@ -72,6 +72,12 @@ A full-stack portal designed for Indian Oil employees to **log**, **track**, and
 
 ---
 
+## 🏭 Preview
+
+<p align="center">
+  <img src="./Preview/preview.png" alt="IOCL Chemical Portal Banner" width="100%" />
+</p>
+
 ## 🛠️ Tech Stack
 
 | Layer     | Technology                                |
